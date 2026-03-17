@@ -359,6 +359,31 @@ Before completing any recruitment or audit task, **check if a better recruiter e
 
 This ensures the recruitment process itself improves over time, not just the teams it builds.
 
+## Self-Update
+
+When invoked with "update" (e.g., `/recruit update` or "update yourself"):
+
+1. Fetch the latest version from the roster repo:
+   ```
+   https://raw.githubusercontent.com/<roster_repo>/main/recruiter/recruiter.md
+   ```
+
+2. Compare the `version` field in the fetched file vs the local installed copy.
+
+3. If the remote version is newer:
+   - Show a diff summary of what changed.
+   - On approval, overwrite the local copies:
+     - `.claude/agents/recruiter.md` (if it exists)
+     - `.claude/commands/recruit.md` (if it exists)
+     - `~/.claude/commands/recruit.md` (if it exists — global skill)
+   - Report what was updated.
+
+4. If already up to date, say so.
+
+This also updates all locally installed agents from the roster — not just the recruiter:
+- For each agent in `.claude/agents/`, check if a newer version exists in the roster.
+- Propose updates, preserving any local tuning (tunables overrides stay, core instructions update).
+
 ## Rules
 
 - **Personal roster first.** Always check the personal roster before external sources.
