@@ -78,6 +78,12 @@ Covers MRs #X through #Y (dates)
 
 ### Recommendations
 - Suggestions that need human decision (new principles, workflow changes)
+
+### Skill Candidates
+- Repeated multi-step patterns that could be extracted into a `/skill` (forward to tech lead)
+
+### Tool Gaps
+- Capabilities agents needed but didn't have (forward to tech lead for provisioning)
 ```
 
 ## Rules
