@@ -19,7 +19,7 @@ requires:
     check: "grep -q git-wright .mcp.json 2>/dev/null"
     optional: true  # Can merge without it, but conflict resolution is manual
 isolation: none
-version: 1.0.0
+version: 1.1.0
 author: mathiasbourgoin
 ---
 
@@ -72,6 +72,42 @@ Use mcp-git-wright for conflict resolution when available.
 | QA found issues | Send back to implementer with QA report |
 | Architectural concern | Flag for discussion, don't merge |
 | Principle violation | Block merge, explain which principle is violated |
+
+## CI Triage
+
+When CI fails on a PR or on main, diagnose before acting:
+
+1. **Get the failing job log** — use your CI CLI (e.g. `gh run view --log-failed | head -100`).
+2. **Classify the failure:**
+
+| Pattern | Diagnosis | Action |
+|---------|-----------|--------|
+| `Library/package "X" not found` | Missing dependency declaration | Add to package manifest (package.json, .opam, Cargo.toml, etc.) |
+| Formatter diff non-empty | Code not formatted before commit | Run formatter, amend commit |
+| Linter/type-check failure | Forbidden pattern or type error | Fix code — never disable the linter to pass CI |
+| Test registration failure | New test not registered in manifest/suite | Add to manifest and re-push |
+| Intermittent timeout / flaky | Flaky test, not related to PR changes | Re-trigger once; if it fails again, file a flakiness issue and merge with a note |
+| Compiler/runtime API change | Dependency updated with breaking change | Escalate to Expert — diagnose before fixing |
+
+3. **Never re-trigger CI blindly more than twice** for the same failure — diagnose root cause first.
+4. **Flaky test policy:** A test that fails intermittently without a code change is flaky. Re-trigger once. If it fails again, file a flakiness issue and merge with a note referencing the issue.
+
+## Expert Escalation
+
+When an Implementer is stuck, **spawn the Expert agent before burning more cycles on guesswork**.
+
+Escalate when:
+- Build fails with an unclear root cause (compiler version skew, missing sublibrary, dependency conflict)
+- A library API change broke existing code and the right fix is not obvious
+- An integration test failure's root cause is not clear from the test output
+- The Implementer has made two or more unsuccessful fix attempts on the same problem
+- An architectural question has no clear answer from reading the project docs
+
+**Workflow:**
+1. Spawn Expert with the full error context and relevant files
+2. Expert returns a diagnosis + concrete fix plan
+3. Hand the fix plan to the Implementer to execute
+4. Do not spawn Expert and Implementer simultaneously on the same problem — diagnose first, then fix
 
 ## Post-Merge Housekeeping
 
