@@ -22,7 +22,10 @@ If you want to maintain your own curated agents and have the recruiter PR new ag
 
 | Agent | Domain | Description |
 |-------|--------|-------------|
-| tech-lead | management | Orchestrates agent teams, triage, batch planning, merge sequencing |
+| **recruiter** | meta | Assembles and evolves project teams — the entry point |
+| **tech-lead** | management | Orchestrates team, gates tool/skill/MCP requests, owns merge process |
+| **skill-creator** | management | Creates skills from MCP servers, CLIs, or ideas; searches registries first |
+| **tool-provisioner** | devops | Discovers and provisions MCP servers and CLI tools; searches registries first |
 | architect | management | Code quality guardian, metrics regression checks, duplication detection |
 | context-manager | management | Maintains shared context document across multi-agent workflows |
 | error-coordinator | management | Correlates CI/test failures, root cause analysis |
@@ -33,7 +36,6 @@ If you want to maintain your own curated agents and have the recruiter PR new ag
 | performance-monitor | devops | Profiles slow tests/CI/endpoints, proposes optimizations |
 | config-migrator | specialist | One-shot pydantic-settings migration |
 | expert-debugger | specialist | Escalation agent for hard build/dependency/API failures |
-| recruiter | meta | Assembles and evolves project teams (this is the entry point) |
 
 ## Structure
 
@@ -41,20 +43,21 @@ If you want to maintain your own curated agents and have the recruiter PR new ag
 agent-roster/
 ├── agents/                  # Agent definitions by domain
 │   ├── backend/
-│   ├── devops/
+│   ├── devops/              # tool-provisioner, performance-monitor
 │   ├── frontend/
-│   ├── management/
+│   ├── management/          # tech-lead, architect, skill-creator, context-manager, ...
 │   ├── security/
-│   ├── specialist/
-│   └── testing/
-├── recruiter/               # The recruiter meta-agent
+│   ├── specialist/          # expert-debugger, config-migrator
+│   └── testing/             # reviewer, qa
+├── skills/                  # Reusable skill definitions (populated over time)
+├── recruiter/               # The recruiter meta-agent (entry point)
 │   └── recruiter.md
-├── schema/                  # Agent definition format spec
+├── schema/                  # Agent/skill definition format spec
 │   └── agent-schema.md
 ├── scripts/
 │   ├── build-index.sh       # Generate index.json from agent files
 │   └── search.sh            # CLI search across the index
-└── index.json               # Auto-generated searchable index
+└── index.json               # Searchable index (fetched via raw URL)
 ```
 
 ## Usage
@@ -155,6 +158,38 @@ The quick install command at the top already sets this up. Or manually:
 mkdir -p .claude/commands && curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/recruiter/recruiter.md > .claude/commands/recruit.md
 ```
 
+## How agents request tools and skills
+
+Agents don't install tools or create skills autonomously. Everything goes through the tech lead:
+
+```
+Agent needs a capability
+  → Requests it from Tech Lead
+    → Tech Lead validates (reject if frivolous)
+      → Tool Provisioner searches MCP/CLI registries
+        OR Skill Creator searches skill registries
+          → Proposes options to Tech Lead
+            → Tech Lead approves
+              → Install + configure
+                → If no existing tool/skill fits:
+                    → Scaffold a new MCP server
+                    → OR create a new skill
+                    → PR it back to this repo
+```
+
+**MCP server registries searched:**
+- [modelcontextprotocol/registry](https://github.com/modelcontextprotocol/registry) — official
+- [mcp.so](https://mcp.so) — 18K+ servers
+- [PulseMCP](https://www.pulsemcp.com/servers) — 10K+ daily-updated
+- [MCP Market](https://mcpmarket.com) — curated
+- [Glama](https://glama.ai/mcp/servers) — production-ready, sorted by popularity
+
+**Skill registries searched:**
+- [anthropics/skills](https://github.com/anthropics/skills) — official
+- [claude-skill-registry](https://github.com/majiayu000/claude-skill-registry) — 80K+ skills
+- [claude-skills](https://github.com/alirezarezvani/claude-skills) — 192 production-ready
+- [awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit) — 35 curated + 15K via SkillKit
+
 ## Self-improvement
 
-The recruiter checks if a better version of itself exists in external sources and proposes self-replacement when found. It also PRs generalizable improvements from project-local agent customizations back to this repo.
+The recruiter checks if a better version of itself exists in external sources and proposes self-replacement when found. Agents can trigger skill creation when they notice repeated manual workflows. The tool provisioner audits installed MCP servers periodically and proposes removals for unused ones. All improvements are PRed back to this repo.

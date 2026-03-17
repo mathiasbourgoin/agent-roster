@@ -26,6 +26,19 @@
   }
 ,
   {
+    "name": "tool-provisioner",
+    "display_name": "Tool Provisioner",
+    "description": "Discovers, evaluates, and provisions MCP servers, CLI tools, and skills for the agent team. Searches registries before installing. Can also scaffold new MCP servers when no existing one fits. All requests go through the tech lead for validation.",
+    "domain": ["devops", "meta"],
+    "tags": ["mcp", "tool-discovery", "provisioning", "mcp-servers", "cli-tools", "installation", "scaffolding"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/devops/tool-provisioner.md"
+  }
+,
+  {
     "name": "architect",
     "display_name": "Architect",
     "description": "Code quality and architecture guardian — runs code health checks, audits for metric regressions, duplication, missing docs, and enforces structural rules. Blocks PRs that would degrade codebase health.",
@@ -75,6 +88,19 @@
     "compatible_with": ["claude-code", "codex"],
     "version": "1.0.0",
     "path": "agents/management/knowledge-synthesizer.md"
+  }
+,
+  {
+    "name": "skill-creator",
+    "display_name": "Skill Creator",
+    "description": "Creates reusable Claude Code skills from MCP servers, CLI tools, or ideas. Searches existing skill registries before creating. Can be triggered by agents who notice repeated manual workflows.",
+    "domain": ["management", "meta"],
+    "tags": ["skills", "slash-commands", "automation", "mcp", "cli", "workflow-extraction", "self-improvement"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/management/skill-creator.md"
   }
 ,
   {
