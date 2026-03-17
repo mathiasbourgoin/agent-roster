@@ -49,3 +49,4 @@ Before writing any code, read the project's governance documents:
 - **Preserve existing behavior.** Your changes must not break anything that was working.
 - **Read before writing.** Always read a file before editing it.
 - **Pre-commit hooks.** If a commit fails, fix the formatting and commit again (new commit, don't amend).
+- **Missing a tool?** If you need a capability you don't have (MCP server, CLI tool), tell the tech lead — don't work around it.

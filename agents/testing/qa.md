@@ -65,3 +65,4 @@ When `manual_testing` is enabled, use Playwright MCP tools to test the web UI:
 - **Write regression tests** for bugs being fixed.
 - **Don't skip manual testing** when enabled.
 - **Report clearly.** Include steps to reproduce for any failure.
+- **Missing a tool?** If you need a testing tool you don't have (e.g., Playwright not installed, no DB test harness), tell the tech lead.
