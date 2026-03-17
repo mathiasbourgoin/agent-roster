@@ -1,0 +1,74 @@
+# Agent Definition Schema
+
+Every agent in this roster MUST follow this format: a markdown file with YAML frontmatter.
+
+## Required Frontmatter Fields
+
+```yaml
+---
+name: <string>              # Unique identifier (kebab-case)
+display_name: <string>      # Human-readable name
+description: <string>       # One-line summary of what this agent does
+domain: [<string>, ...]     # Primary domains (e.g., security, devops, frontend)
+tags: [<string>, ...]       # Searchable tags for discovery
+model: <string>             # Recommended model (opus, sonnet, haiku)
+complexity: <low|medium|high>  # Task complexity this agent handles
+compatible_with: [<string>, ...]  # Platforms: claude-code, codex, cursor, aider, etc.
+---
+```
+
+## Optional Frontmatter Fields
+
+```yaml
+tunables:                    # Parameters that can be overridden locally
+  <key>: <default_value>
+requires:                    # Tool and MCP server dependencies
+  - name: <tool-name>        # e.g., playwright, mcp-git-wright, web-search
+    type: <mcp|builtin|cli>  # mcp = MCP server, builtin = Claude built-in tool, cli = external CLI tool
+    install: <string>        # Install command or instructions (optional)
+    check: <string>          # Command to verify it's available (optional)
+    optional: <bool>         # If true, agent works without it but with reduced capability
+isolation: <worktree|none>   # Whether the agent needs an isolated workspace
+replaces: [<agent-name>, ...] # Agents this one supersedes (for upgrade proposals)
+version: <semver>            # Version for tracking updates
+author: <string>             # Who created/maintains this agent
+source: <url>                # Original source if forked/adapted
+```
+
+## Body Structure
+
+After the frontmatter, the markdown body should contain:
+
+1. **Role description** — Who is this agent? What's its mission?
+2. **Workflow** — Step-by-step process the agent follows
+3. **Rules** — Hard constraints and invariants
+4. **Output format** — Expected deliverable structure (if applicable)
+
+## Example
+
+```markdown
+---
+name: vuln-triager
+display_name: Vulnerability Triager
+description: Analyzes security vulnerability reports, assigns severity scores, and recommends remediation priority.
+domain: [security, triage]
+tags: [bounty, cve, severity-scoring, vulnerability]
+model: sonnet
+complexity: medium
+compatible_with: [claude-code, codex]
+tunables:
+  severity_threshold: medium
+  auto_escalate: false
+requires: [web-search]
+version: 1.0.0
+---
+
+# Vulnerability Triager
+
+You are a security triage specialist...
+```
+
+## Naming Convention
+
+Files are named `<agent-name>.md` matching the `name` frontmatter field.
+Placed in `agents/<primary-domain>/` directory.

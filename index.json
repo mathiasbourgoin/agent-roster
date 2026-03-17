@@ -1,0 +1,157 @@
+[
+  {
+    "name": "implementer",
+    "display_name": "Implementer",
+    "description": "Implementation agent — takes an issue or task description, works in an isolated git worktree, writes the code, and opens a merge/pull request. Designed to be spawned multiple times in parallel.",
+    "domain": ["backend", "implementation"],
+    "tags": ["coding", "feature", "bugfix", "worktree", "parallel", "merge-request"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code", "codex"],
+    "version": "1.0.0",
+    "path": "agents/backend/implementer.md"
+  }
+,
+  {
+    "name": "performance-monitor",
+    "display_name": "Performance Monitor",
+    "description": "Monitors application and CI performance — profiles slow tests, identifies build bottlenecks, tracks response times, and proposes concrete optimizations.",
+    "domain": ["devops", "performance"],
+    "tags": ["performance", "profiling", "monitoring", "ci-optimization", "benchmarking", "bottleneck"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/devops/performance-monitor.md"
+  }
+,
+  {
+    "name": "architect",
+    "display_name": "Architect",
+    "description": "Code quality and architecture guardian — runs code health checks, audits for metric regressions, duplication, missing docs, and enforces structural rules. Blocks PRs that would degrade codebase health.",
+    "domain": ["management", "quality"],
+    "tags": ["architecture", "code-quality", "metrics", "duplication", "documentation", "structural-review", "guardian"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/management/architect.md"
+  }
+,
+  {
+    "name": "context-manager",
+    "display_name": "Context Manager",
+    "description": "Maintains shared context across multi-agent workflows — keeps a living document of decisions, findings, and state so agents don't duplicate work or contradict each other.",
+    "domain": ["management", "orchestration"],
+    "tags": ["context", "shared-state", "coordination", "knowledge-sharing", "multi-agent"],
+    "model": "haiku",
+    "complexity": "low",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/management/context-manager.md"
+  }
+,
+  {
+    "name": "error-coordinator",
+    "display_name": "Error Coordinator",
+    "description": "Investigates recurring failures across the agent team — correlates errors from CI, tests, and agent runs, identifies root causes, and proposes fixes or workflow changes.",
+    "domain": ["management", "debugging"],
+    "tags": ["error-analysis", "debugging", "ci-failures", "root-cause", "correlation", "resilience"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/management/error-coordinator.md"
+  }
+,
+  {
+    "name": "knowledge-synthesizer",
+    "display_name": "Knowledge Synthesizer",
+    "description": "Extracts patterns and lessons from completed agent work — reviews merged MRs, closed issues, and agent reports to distill reusable knowledge back into project docs and agent definitions.",
+    "domain": ["management", "documentation"],
+    "tags": ["knowledge-management", "patterns", "lessons-learned", "documentation", "retrospective"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code", "codex"],
+    "version": "1.0.0",
+    "path": "agents/management/knowledge-synthesizer.md"
+  }
+,
+  {
+    "name": "tech-lead",
+    "display_name": "Tech Lead",
+    "description": "Orchestrates agent teams — triages issues, plans batches, coordinates implementation/review/QA pipeline, owns merge process and project governance documents.",
+    "domain": ["management", "orchestration"],
+    "tags": ["team-lead", "triage", "merge-sequencing", "governance", "batch-planning"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/management/tech-lead.md"
+  }
+,
+  {
+    "name": "config-migrator",
+    "display_name": "Config Migrator",
+    "description": "One-shot specialist for migrating scattered os.environ.get() calls to a centralized pydantic-settings Settings class. Audits, catalogs, replaces, and validates all configuration access.",
+    "domain": ["specialist", "refactoring"],
+    "tags": ["pydantic-settings", "config", "migration", "env-vars", "one-shot"],
+    "model": "sonnet",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/specialist/config-migrator.md"
+  }
+,
+  {
+    "name": "expert-debugger",
+    "display_name": "Expert Debugger",
+    "description": "Senior escalation agent for hard problems — diagnoses difficult build failures, dependency conflicts, subtle API breaks, and architectural dead-ends. Returns a clear diagnosis and fix plan without implementing the fix.",
+    "domain": ["specialist", "debugging"],
+    "tags": ["expert", "diagnosis", "build-failures", "dependency-conflicts", "escalation", "root-cause"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/specialist/expert-debugger.md"
+  }
+,
+  {
+    "name": "qa",
+    "display_name": "QA Tester",
+    "description": "QA engineer — runs existing tests, writes new test cases for changed code, and performs manual testing via Playwright against the running local environment.",
+    "domain": ["testing", "qa"],
+    "tags": ["testing", "regression", "playwright", "manual-testing", "test-gaps"],
+    "model": "haiku",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/testing/qa.md"
+  }
+,
+  {
+    "name": "reviewer",
+    "display_name": "Code Reviewer",
+    "description": "Thorough code reviewer — examines merge requests for correctness, security, edge cases, and style. Returns structured feedback with required/optional classifications.",
+    "domain": ["testing", "review"],
+    "tags": ["code-review", "security-review", "merge-request", "feedback"],
+    "model": "opus",
+    "complexity": "medium",
+    "compatible_with": ["claude-code", "codex", "cursor"],
+    "version": "1.0.0",
+    "path": "agents/testing/reviewer.md"
+  }
+,
+  {
+    "name": "recruiter",
+    "display_name": "Agent Recruiter",
+    "description": "Meta-agent that analyzes a project, searches agent sources (personal roster + public registries), and assembles or updates an optimal agent team. Can audit existing teams and propose upgrades.",
+    "domain": ["management", "meta"],
+    "tags": ["recruiter", "team-building", "agent-discovery", "roster-management", "auto-upgrade"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "recruiter/recruiter.md"
+  }
+]
