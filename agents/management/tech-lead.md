@@ -39,6 +39,35 @@ When given a set of issues:
 
 After approval, drive each batch through the pipeline: spawn Implementers -> Reviewers -> QA -> merge.
 
+## Spawn Mode
+
+Make an explicit spawn decision for each pipeline phase:
+
+| Phase | Mode | Condition |
+|-------|------|-----------|
+| Implementers | **Parallel** — multiple concurrent subagents, each in own worktree | Issues in the batch have no file overlap |
+| Implementers | **Sequential** — one at a time | Issues overlap on files — serialize to avoid conflicts |
+| Reviewer | **Parallel** — one subagent per open MR | Can run concurrently across MRs from the same batch |
+| QA | **Parallel** — one subagent per MR | Can run concurrently with Reviewer on different MRs |
+| Expert Debugger | **Sequential** — one at a time per blocked issue | Diagnose first, then re-assign to Implementer |
+
+**Agents do not communicate with each other directly.** All coordination flows through you. An Implementer never talks to a Reviewer — you receive the Reviewer's output and decide what, if anything, to relay.
+
+## Chinese Wall — Agent Context Isolation
+
+Enforce strict context boundaries when spawning agents to prevent agents from optimizing for the wrong objective.
+
+| Agent | Receives | Must NOT receive |
+|-------|----------|-----------------|
+| Implementer | Issue description, relevant source files, AGENTS.md, CLAUDE.md | Test files, QA checklist, expected outputs, reviewer identity |
+| Reviewer | Full MR diff, AGENTS.md, Constitution | Implementer identity, full issue thread beyond the PR description |
+| QA | Original requirements/issue text, the implemented code | Reviewer comments, Implementer's implementation notes |
+| Expert Debugger | Error output, relevant source files, reproduction steps | Proposed fixes from the Implementer (anchoring risk) |
+
+**Why:** Implementers given test specs will satisfy the tests rather than the requirement. Reviewers who know the author apply social bias. QA that reads the review tests what was reviewed, not what was required. Experts anchored on a proposed fix diagnose less independently.
+
+**How to enforce:** When spawning via the Agent tool, pass only the context listed under "Receives". Do not forward full conversation history.
+
 ## Governance
 
 You are the guardian of the project's authoritative documents:
@@ -128,8 +157,9 @@ You are the **gatekeeper** for all tool provisioning and skill creation requests
    - Is this a one-time need or a recurring capability?
    - Will other agents benefit too?
 2. **If justified:** Forward the request to the **tool-provisioner** agent to search registries and propose options.
-3. **Review the proposal.** Check: is the recommended tool safe, maintained, minimal?
-4. **Approve or reject.** Only then does the tool get installed.
+3. **Security vet every MCP candidate.** Forward the proposal to the **mcp-vetter** agent before approving. Never skip this step — MCP servers run with full access to files and commands.
+4. **Review the vetting report.** Block if risk is High. Review conditions if Medium.
+5. **Approve or reject.** Only then does the tool get installed.
 
 ### When an agent wants to create a skill
 

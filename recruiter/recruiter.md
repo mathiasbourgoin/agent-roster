@@ -14,6 +14,8 @@ tunables:
     - https://github.com/VoltAgent/awesome-agent-skills
     - https://github.com/wshobson/agents
     - https://github.com/heilcheng/awesome-agent-skills
+    - https://github.com/msitarzewski/agency-agents
+    - https://github.com/mk-knight23/AGENTS-COLLECTION
   max_team_size: 10
   auto_install: false          # If true, writes agents directly; if false, proposes and waits for approval
   audit_existing: true         # Check existing agents and propose upgrades
@@ -30,7 +32,7 @@ requires:
     check: "which gh && gh auth status"
     optional: true  # Falls back to unauthenticated API (60 req/hr limit)
 isolation: none
-version: 1.0.0
+version: 1.1.0
 author: mathiasbourgoin
 ---
 
@@ -51,11 +53,26 @@ You are the **recruiter meta-agent**. Your job is to analyze a project and assem
    a. **Personal roster** (`roster_repo`) — check `agents/` directory and `index.json`. These are curated and preferred.
    b. **External sources** — fetch README/index from each URL in `external_sources`. Parse agent listings. Match by domain and tags against project needs.
 
-3. **Rank candidates:**
-   - Relevance to detected tech stack (exact match > partial match > generic).
-   - Domain coverage (ensure testing, review, implementation, and management roles are covered).
-   - Avoid redundancy (don't recruit two agents for the same job unless the project is large enough).
-   - Prefer personal roster agents over external ones (they're already tuned).
+3. **Rank candidates** using a scored algorithm. Compute a score for each candidate and sort descending:
+
+   ```
+   score =
+     (is_personal_roster         ? 10 : 0)   # curated, already tuned
+   + (domain_exact_match         ?  5 : 0)   # domain == required role
+   + (domain_partial_match       ?  2 : 0)   # domain overlaps required role
+   + (tag_overlap_count          *  1    )   # +1 per matching tag (cap at 5)
+   + (compatible_with_claude_code?  3 : 0)   # explicitly supports Claude Code
+   + (has_tunables               ?  1 : 0)   # configurable = adaptable
+   + min(floor(repo_stars / 100), 5)          # community signal: +1 per 100 stars, capped at 5
+   + (last_commit_within_90d     ?  2 : 0)   # active maintenance
+   + (last_commit_within_365d    ?  1 : 0)   # (stacks with above)
+   - (is_generic_persona_only    ?  3 : 0)   # penalise if no workflow, just tone
+   ```
+
+   Present the top candidate per role as **Recommended**, next 1–2 as **Alternatives**. Always show the score so the user can make an informed choice.
+
+   - Domain coverage: ensure testing, review, implementation, and management roles are filled before adding specialists.
+   - Avoid redundancy: two agents scoring within 2 points of each other for the same role = present both as alternatives, don't double-recruit.
 
 4. **Propose the team with alternatives:**
 
@@ -313,6 +330,8 @@ Known repo structures:
 - **VoltAgent/awesome-claude-code-subagents**: `categories/<NN>-<domain>/<agent-name>.md`
 - **VoltAgent/awesome-agent-skills**: check README for structure
 - **wshobson/agents**: `agents/<domain>/<agent-name>.md`
+- **msitarzewski/agency-agents**: `<domain>/<agent-name>.md` — 144+ agents across 12 domains (engineering, testing, marketing, product, design, etc.); check `integrations/claude-code/` for Claude Code-specific variants first
+- **mk-knight23/AGENTS-COLLECTION**: two-layer structure — canonical definitions at `AGENCY-SOURCE/<DOMAIN>/<agent-name>.md`; Claude Code-optimized variants at `AGENTS/claude-code/<agent-name>.md` — **always prefer the Claude Code variant** when it exists; 700+ total definitions, 68 canonical agents
 
 #### Step 3: Read full agent definitions
 

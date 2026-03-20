@@ -36,6 +36,7 @@ If you want to maintain your own curated agents and have the recruiter PR new ag
 | performance-monitor | devops | Profiles slow tests/CI/endpoints, proposes optimizations |
 | config-migrator | specialist | One-shot pydantic-settings migration |
 | expert-debugger | specialist | Escalation agent for hard build/dependency/API failures |
+| **mcp-vetter** | security | Vets MCP candidates before approval — reputation, permissions, code patterns |
 
 ## Structure
 
@@ -137,6 +138,8 @@ The recruiter deep-searches these public registries (full directory tree crawl, 
 - [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills) — 500+ agent skills
 - [wshobson/agents](https://github.com/wshobson/agents) — 112 specialized personas
 - [heilcheng/awesome-agent-skills](https://github.com/heilcheng/awesome-agent-skills) — curated skills collection
+- [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) — 144+ agents across 12 professional domains
+- [mk-knight23/AGENTS-COLLECTION](https://github.com/mk-knight23/AGENTS-COLLECTION) — 700+ definitions, 68 canonical agents with Claude Code-specific variants
 
 ## Use as a Claude Code skill
 
@@ -169,12 +172,13 @@ Agent needs a capability
       → Tool Provisioner searches MCP/CLI registries
         OR Skill Creator searches skill registries
           → Proposes options to Tech Lead
-            → Tech Lead approves
-              → Install + configure
-                → If no existing tool/skill fits:
-                    → Scaffold a new MCP server
-                    → OR create a new skill
-                    → PR it back to this repo
+            → MCP Vetter checks reputation, permissions, code patterns  ← new
+              → Tech Lead approves
+                → Install + configure
+                  → If no existing tool/skill fits:
+                      → Scaffold a new MCP server
+                      → OR create a new skill
+                      → PR it back to this repo
 ```
 
 **MCP server registries searched:**
