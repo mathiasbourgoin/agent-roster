@@ -10,6 +10,7 @@ compatible_with: [claude-code]
 tunables:
   settings_framework: pydantic-settings  # pydantic-settings | dynaconf | python-decouple
   secrets_must_be_required: true
+requires: []
 isolation: worktree
 version: 1.0.0
 author: mathiasbourgoin

@@ -391,11 +391,16 @@ When invoked with "update" (e.g., `/recruit update` or "update yourself"):
 
 3. If the remote version is newer:
    - Show a diff summary of what changed.
-   - On approval, overwrite the local copies:
+   - On approval, **merge** into each local copy — do not overwrite wholesale:
+     1. Extract the `tunables:` block from the current local file.
+     2. Apply the remote version's body (instructions, rules, workflow).
+     3. Re-inject the local `tunables:` block over the remote defaults.
+     4. Write the merged result.
+   - Files to update:
      - `.claude/agents/recruiter.md` (if it exists)
      - `.claude/commands/recruit.md` (if it exists)
      - `~/.claude/commands/recruit.md` (if it exists — global skill)
-   - Report what was updated.
+   - Report what was updated and confirm local tunables were preserved.
 
 4. If already up to date, say so.
 

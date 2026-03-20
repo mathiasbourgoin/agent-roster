@@ -112,8 +112,21 @@
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "agents/management/tech-lead.md"
+  }
+,
+  {
+    "name": "mcp-vetter",
+    "display_name": "MCP Security Vetter",
+    "description": "Vets MCP server candidates for security risks before tech-lead approval — checks source reputation, declared permissions, package registry signals, and code patterns.",
+    "domain": ["security", "devops"],
+    "tags": ["security", "mcp", "vetting", "supply-chain", "tool-provisioning"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/security/mcp-vetter.md"
   }
 ,
   {
@@ -164,7 +177,7 @@
     "model": "opus",
     "complexity": "medium",
     "compatible_with": ["claude-code", "codex", "cursor"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "agents/testing/reviewer.md"
   }
 ,
@@ -177,7 +190,7 @@
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "recruiter/recruiter.md"
   }
 ]
