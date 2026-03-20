@@ -24,7 +24,7 @@ requires:
     check: "which gh && gh auth status"
     optional: true  # Falls back to unauthenticated API (60 req/hr)
 isolation: none
-version: 1.0.0
+version: 1.1.0
 author: mathiasbourgoin
 ---
 
@@ -89,7 +89,7 @@ Read the MCP server's manifest, README, and tool list to identify what it can do
 
 **Automatic block conditions — recommend block regardless of other scores:**
 - Declares tools that execute arbitrary shell commands without a clear, documented use case
-- Reads from `~/.ssh/`, `~/.aws/`, `~/.gnupg/`, `~/.config/`, or other credential directories without an explicit stated reason
+- Reads from `~/.ssh/`, `~/.aws/`, `~/.gnupg/`, `~/.config/`, or other credential directories without a documented, verifiable technical justification in the README
 - Sends data to external URLs that are not documented in the README
 - Requests filesystem write access outside the project directory without justification
 - Install command uses `curl ... | sh` from a non-official, non-verified host
@@ -113,6 +113,21 @@ curl <raw-source-url> | grep -nE "(exec|spawn|eval|child_process|subprocess|shel
 
 Flag as Red if: credentials are read AND sent to a network endpoint in the same code path.
 Flag as Yellow if: eval/exec is used on any user-controlled input.
+
+**Transitive dependency scan** — if source is available and the package has a lockfile, scan for known vulnerabilities in the full dependency tree:
+
+```bash
+# npm
+npm audit --audit-level=high 2>/dev/null || true
+
+# pip (requires pip-audit)
+pip-audit -r requirements.txt 2>/dev/null || true
+
+# cargo
+cargo audit 2>/dev/null || true
+```
+
+Flag as Yellow if any high-severity transitive CVE is found. Flag as Red if critical severity. Note: this checks declared dependencies, not deeply nested transitive ones — treat it as a best-effort signal, not a guarantee.
 
 ### 5. Install Command Safety
 

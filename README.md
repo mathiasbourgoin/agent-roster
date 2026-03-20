@@ -1,6 +1,6 @@
 # Agent Roster
 
-A curated registry of reusable AI agent definitions + a recruiter meta-agent that assembles, audits, and evolves project teams.
+A curated registry of reusable Claude Code agent definitions. One command gives your project a full AI agent team — recruiter, tech lead, implementers, reviewers, QA, security vetting, and more. The recruiter assembles the right team for your stack, installs it, and keeps it up to date.
 
 ## Quick install
 
@@ -172,7 +172,7 @@ Agent needs a capability
       → Tool Provisioner searches MCP/CLI registries
         OR Skill Creator searches skill registries
           → Proposes options to Tech Lead
-            → MCP Vetter checks reputation, permissions, code patterns  ← new
+            → MCP Vetter checks reputation, permissions, code patterns
               → Tech Lead approves
                 → Install + configure
                   → If no existing tool/skill fits:
@@ -194,6 +194,8 @@ Agent needs a capability
 - [claude-skills](https://github.com/alirezarezvani/claude-skills) — 192 production-ready
 - [awesome-claude-code-toolkit](https://github.com/rohitg00/awesome-claude-code-toolkit) — 35 curated + 15K via SkillKit
 
-## Self-improvement
+## Keeping your team up to date
 
-The recruiter checks if a better version of itself exists in external sources and proposes self-replacement when found. Agents can trigger skill creation when they notice repeated manual workflows. The tool provisioner audits installed MCP servers periodically and proposes removals for unused ones. All improvements are PRed back to this repo.
+Run `/recruit update` at any time to check for newer versions of your installed agents and the recruiter itself. Local tunables are preserved — only the agent instructions update.
+
+The recruiter also self-improves: during searches it checks external sources for better recruiters and proposes replacing itself if one is found. Generalizable improvements your team makes locally get PRed back to this repo.

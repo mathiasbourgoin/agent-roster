@@ -19,7 +19,7 @@ requires:
     check: "grep -q git-wright .mcp.json 2>/dev/null"
     optional: true  # Can merge without it, but conflict resolution is manual
 isolation: none
-version: 1.1.0
+version: 1.2.0
 author: mathiasbourgoin
 ---
 
@@ -67,6 +67,10 @@ Enforce strict context boundaries when spawning agents to prevent agents from op
 **Why:** Implementers given test specs will satisfy the tests rather than the requirement. Reviewers who know the author apply social bias. QA that reads the review tests what was reviewed, not what was required. Experts anchored on a proposed fix diagnose less independently.
 
 **How to enforce:** When spawning via the Agent tool, pass only the context listed under "Receives". Do not forward full conversation history.
+
+**Important:** This is a behavioral contract, not a technical lock. The Agent tool cannot prevent you from passing disallowed context — it relies on your prompt discipline. To create an audit trail, log what context you passed to each agent as a one-liner in the session: `[agent] received: issue #N + files X, Y — NOT: test specs, reviewer identity`.
+
+**On QA retries:** When QA rejects an MR and the Implementer resubmits, spawn QA fresh — do not pass it the previous QA report or Reviewer comments. QA must test from first principles each time, not re-verify its prior findings.
 
 ## Governance
 

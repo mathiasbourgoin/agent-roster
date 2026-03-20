@@ -10,6 +10,8 @@ compatible_with: [claude-code]
 tunables:
   metrics_tool: custom              # custom | sonarqube | codeclimate | none
   metrics_command: ""               # Command to generate metrics snapshot (project-specific)
+                                    # Examples: "dune build @doc" (OCaml), "cargo doc" (Rust),
+                                    #           "npx ts-morph-stats" (TS), "radon cc -a src/" (Python)
   compare_command: ""               # Command to compare metrics against baseline
   duplication_check: true
   doc_coverage_check: true
@@ -18,7 +20,7 @@ tunables:
   require_interface_files: false    # For languages with separate interface files (OCaml .mli, C .h)
 requires: []
 isolation: none
-version: 1.0.0
+version: 1.1.0
 author: mathiasbourgoin
 source: Adapted from an OCaml/dune project's architecture guardian agent
 ---

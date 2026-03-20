@@ -1,32 +1,36 @@
-# AGENTS.md — agent-roster audit team
+# AGENTS.md — agent-roster
 
-## Mission
+## Project
 
-Audit and review the agent-roster project: schema compliance, cross-reference validity,
-consistency across agent definitions, documentation accuracy, and security of the
-provisioning pipeline.
-
-## Team
-
-| Agent | Role | Model |
-|-------|------|-------|
-| tech-lead | Orchestrates audit — assigns work, collects reports, synthesizes findings | opus |
-| architect | Structural audit — schema compliance, cross-references, consistency, duplication | sonnet |
-| reviewer | Quality review — correctness, security of pipeline definitions, completeness | opus |
-
-## Audit Scope
-
-- **Schema compliance**: all 15 agent `.md` files vs `schema/agent-schema.md`
-- **Cross-reference validity**: tech-lead references mcp-vetter, tool-provisioner, skill-creator, expert-debugger — do they all exist and are names correct?
-- **Tag/domain consistency**: are domains and tags used consistently across agents?
-- **Duplication**: are any instructions copy-pasted across agents when they should be shared?
-- **README accuracy**: does README reflect the current agent set (15 agents including mcp-vetter)?
-- **Pipeline security**: is the mcp-vetter's vetting checklist sound? Any gaps?
-- **index.json integrity**: does it match the actual agent files?
+A curated registry of reusable Claude Code agent definitions paired with a recruiter meta-agent that assembles, audits, and evolves project teams.
 
 ## Conventions
 
-- Commit convention: conventional commits
-- Issue tracker: GitHub
-- No implementation in this pass — audit produces a findings report only
-- Tech-lead produces a final `AUDIT-REPORT.md` summarizing all findings with severity (required / optional)
+- **Commit convention:** conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
+- **Issue tracker:** GitHub
+- **Branch strategy:** feature branches → PR → merge to main
+- **Versioning:** semver on each agent (`version:` frontmatter field) — bump on any behavioral change
+
+## Agent Definitions
+
+All agents live in `agents/<domain>/` or `recruiter/`. They follow the schema in `schema/agent-schema.md`.
+
+When modifying an agent:
+1. Bump its `version` field (patch for fixes, minor for new behavior)
+2. Run `./scripts/build-index.sh > index.json` to update the index
+3. Update README.md agent table if the description changed
+
+## Adding a New Agent
+
+1. Create `agents/<domain>/<agent-name>.md` following `schema/agent-schema.md`
+2. Run `./scripts/build-index.sh > index.json`
+3. Add a row to the README agent table
+4. Open a PR
+
+Preferred path: use the recruiter's Mode 4 — it handles creation, local install, and PR in one step.
+
+## Pipeline & Governance
+
+The tech-lead orchestrates all agents. No agent provisions tools, creates skills, or installs MCP servers without going through the tech-lead → tool-provisioner → mcp-vetter pipeline.
+
+See `agents/management/tech-lead.md` for the full governance model.
