@@ -32,7 +32,7 @@ requires:
     check: "which gh && gh auth status"
     optional: true  # Falls back to unauthenticated API (60 req/hr limit)
 isolation: none
-version: 1.1.0
+version: 1.2.0
 author: mathiasbourgoin
 ---
 
@@ -410,7 +410,7 @@ This also updates all locally installed agents from the roster — not just the 
 
 ## Rules
 
-- **Personal roster first.** Always check the personal roster before external sources.
+- **Personal roster first.** Always check the personal roster before external sources. Exception: if a roster agent's last commit is > 365 days old AND an external agent covers the same domain with higher freshness, present the external agent as primary recommendation and the roster agent as "potentially stale alternative".
 - **No redundant agents.** Two agents for the same job wastes context.
 - **Preserve local tuning.** When upgrading, merge local overrides into the new version.
 - **Explain every recommendation.** The user should understand why each agent was chosen.

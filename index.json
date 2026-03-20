@@ -47,7 +47,7 @@
     "model": "sonnet",
     "complexity": "medium",
     "compatible_with": ["claude-code"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "agents/management/architect.md"
   }
 ,
@@ -73,7 +73,7 @@
     "model": "sonnet",
     "complexity": "medium",
     "compatible_with": ["claude-code"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "agents/management/error-coordinator.md"
   }
 ,
@@ -112,7 +112,7 @@
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
-    "version": "1.1.0",
+    "version": "1.2.0",
     "path": "agents/management/tech-lead.md"
   }
 ,
@@ -125,7 +125,7 @@
     "model": "sonnet",
     "complexity": "medium",
     "compatible_with": ["claude-code"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "agents/security/mcp-vetter.md"
   }
 ,
@@ -190,7 +190,7 @@
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
-    "version": "1.1.0",
+    "version": "1.2.0",
     "path": "recruiter/recruiter.md"
   }
 ]
