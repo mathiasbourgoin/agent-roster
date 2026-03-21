@@ -10,7 +10,17 @@ Run this from your project root to install the recruiter as both an agent and a 
 mkdir -p .claude/agents .claude/commands && curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/recruiter/recruiter.md | tee .claude/agents/recruiter.md .claude/commands/recruit.md > /dev/null
 ```
 
-Then use `/recruit` in Claude Code to assemble or audit your agent team.
+Then use `/recruit` in Claude Code to assemble or audit your agent team. After assembling your team, run `/recruit govern` to set up governance rules.
+
+### Optional: install the governor standalone
+
+The governor can also be installed independently as a `/govern` skill:
+
+```bash
+mkdir -p .claude/agents .claude/commands && \
+  curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/agents/management/governor.md > .claude/agents/governor.md && \
+  curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/governor/governor.md > .claude/commands/govern.md
+```
 
 The recruiter fetches everything it needs from GitHub at runtime — the roster index, individual agent definitions, and external sources. No local clone required.
 
@@ -23,6 +33,7 @@ If you want to maintain your own curated agents and have the recruiter PR new ag
 | Agent | Domain | Description |
 |-------|--------|-------------|
 | **recruiter** | meta | Assembles and evolves project teams — the entry point |
+| **governor** | management | Generates `.claude/rules/` governance files via Socratic dialogue — anti-sycophancy, escalation, scope |
 | **tech-lead** | management | Orchestrates team, gates tool/skill/MCP requests, owns merge process |
 | **skill-creator** | management | Creates skills from MCP servers, CLIs, or ideas; searches registries first |
 | **tool-provisioner** | devops | Discovers and provisions MCP servers and CLI tools; searches registries first |
@@ -53,6 +64,8 @@ agent-roster/
 ├── skills/                  # Reusable skill definitions (populated over time)
 ├── recruiter/               # The recruiter meta-agent (entry point)
 │   └── recruiter.md
+├── governor/                # The governor meta-agent (installable as /govern)
+│   └── governor.md
 ├── schema/                  # Agent/skill definition format spec
 │   └── agent-schema.md
 ├── scripts/
@@ -81,7 +94,7 @@ https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/index.json
 
 ### Recruiter modes
 
-The recruiter has 4 modes:
+The recruiter has 5 modes:
 
 **Mode 1 — Initial team assembly** (no existing `.claude/agents/`):
 1. Analyzes the project's tech stack, languages, CI, issue tracker
@@ -103,6 +116,12 @@ The recruiter has 4 modes:
 - Installs it locally in the project
 - **Opens a PR on this roster repo** so it's available for future projects
 - Also detects generalizable improvements to existing agents and PRs them back
+
+**Mode 5 — Governance setup** (`/recruit govern`):
+- Installs the governor agent if not already present
+- Invokes it to generate `.claude/rules/` governance files via a short Socratic dialogue
+- Produces: `sycophancy.md` (anti-sycophancy + L0 self-checks), `escalation.md` (when to pause for human approval), `agent-scope.md` (autonomous action limits), plus path-scoped rules inferred from the tech stack
+- Also refactors bloated `CLAUDE.md` by extracting rules into the right files
 
 ### Agent dependencies
 

@@ -78,6 +78,19 @@
   }
 ,
   {
+    "name": "governor",
+    "display_name": "Governor",
+    "description": "Audits and governs a Claude Code project's AI configuration — generates modular .claude/rules/ files, refactors bloated CLAUDE.md, and installs anti-sycophancy and escalation standards through a focused Socratic dialogue.",
+    "domain": ["management", "governance"],
+    "tags": ["governance", "rules", "anti-sycophancy", "escalation", "claude-rules", "claude-md", "project-hygiene", "calibration"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.0.0",
+    "path": "agents/management/governor.md"
+  }
+,
+  {
     "name": "knowledge-synthesizer",
     "display_name": "Knowledge Synthesizer",
     "description": "Extracts patterns and lessons from completed agent work — reviews merged MRs, closed issues, and agent reports to distill reusable knowledge back into project docs and agent definitions.",
