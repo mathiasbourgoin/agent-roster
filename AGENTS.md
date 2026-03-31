@@ -40,7 +40,7 @@ A curated registry of reusable agent definitions, skills, rules, and hooks — p
 | Agent | Version | Model | Purpose |
 |-------|---------|-------|---------|
 | tech-lead | 1.3.0 | opus | Orchestrates teams, enforces Ralph Loop with tiered evaluation |
-| recruiter | 1.3.0 | opus | Finds and assembles agent teams from roster + external sources |
+| recruiter | 1.5.0 | opus | Finds and assembles agent teams from roster + external sources |
 | harness-builder | 1.0.0 | opus | Assembles complete harness configs (agents + rules + hooks + skills + KB) |
 | governor | 2.0.0 | opus | Generates .claude/rules/ via Socratic dialogue, enforces KB properties |
 | kb-agent | 2.0.0 | opus | Bootstraps, maintains, and audits the knowledge base (kb/) |

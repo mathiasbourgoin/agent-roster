@@ -225,7 +225,7 @@ This keeps the harness coherent and auditable.
 
 ## External Sources
 
-The recruiter searches this roster first, then public external registries such as:
+The recruiter builds and consumes a deterministic index from `index-sources.json` (roster first, then configured external sources):
 
 - `VoltAgent/awesome-claude-code-subagents`
 - `VoltAgent/awesome-agent-skills`
@@ -262,7 +262,7 @@ To add or update components manually:
 3. rebuild the index:
 
 ```bash
-./scripts/build-index.sh > index.json
+npm run build:index
 ```
 
 4. update `AGENTS.md` if the inventory changes
