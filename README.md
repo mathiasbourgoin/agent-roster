@@ -230,6 +230,15 @@ The quick install command at the top already sets this up. Or manually:
 mkdir -p .claude/commands && curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/recruiter/recruiter.md > .claude/commands/recruit.md
 ```
 
+## Improvement Loop Skills
+
+The roster now also includes two skills for bounded self-improvement workflows:
+
+- `improvement-loop-planner` — explores KB, tests, CI, issues, and code signals to propose bounded improvement loops
+- `improvement-loop` — executes an approved loop spec with explicit scope, metric, verification, and keep/discard rules
+
+These are intended as constrained, verification-first workflow tools, not open-ended autonomy.
+
 ## How agents request tools and skills
 
 Agents don't install tools or create skills autonomously. Everything goes through the tech lead:

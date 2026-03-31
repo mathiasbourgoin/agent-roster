@@ -23,9 +23,28 @@ Optional:
 
 - `Read-only context:`
 - `Guard:`
+- `Keep rule:`
+- `Discard rule:`
 - `KB basis:`
 
 If any required field is missing or too vague to execute safely, stop and ask the user to complete the loop spec.
+
+If `Max iterations` is a range (e.g. `3-5`), stop and ask the user to pick a specific integer before proceeding.
+
+Example accepted spec:
+
+```text
+Objective: Reduce flaky auth test failures to zero
+Writable scope: tests/auth/**, src/auth/**
+Read-only context: kb/spec.md, kb/properties.md, docs/auth.md
+Metric: auth test suite passes with zero flakes
+Verify: pytest tests/auth -q
+Guard: pytest -q
+Max iterations: 4
+Keep rule: keep if flake count strictly decreases and guard passes
+Discard rule: revert if flake count stays the same or increases, or if guard fails
+KB basis: kb/spec.md auth requirements, kb/properties.md reliability rules
+```
 
 ## Setup
 
@@ -47,6 +66,7 @@ If any required field is missing or too vague to execute safely, stop and ask th
 
 - Run the verify command before any changes
 - Run the guard command too, if provided
+- Check whether `improvement/` is listed in `.gitignore`; if not, add it before creating any log files
 - Record baseline results in a simple log at:
 
 ```text
@@ -77,13 +97,14 @@ For each iteration:
 3. Run `Verify`
 4. Run `Guard` if provided
 5. Compare against the baseline or prior kept state
-6. Decide:
-   - **Keep** if the metric improves or the binary target condition is met and guard still passes
-   - **Discard** if the metric regresses, the change is neutral with added complexity, or guard fails
+6. Decide using the Keep/Discard Discipline below
 7. Log the outcome to `results.tsv`
 
 ## Keep/Discard Discipline
 
+- Apply the spec's `Keep rule` and `Discard rule` if provided; they override the defaults below
+- Default keep: metric improves or binary target is met and guard still passes
+- Default discard: metric regresses, change is neutral with added complexity, or guard fails
 - One meaningful change per iteration
 - Do not stack multiple speculative edits before verification
 - Simpler changes win when results are equal
