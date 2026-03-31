@@ -28,7 +28,7 @@ Use it for:
 - governance setup
 - update flow
 
-`/harness` exists as a more advanced subsystem entrypoint for explicit harness management, but it is not the front door.
+The `harness-builder` agent handles explicit harness assembly for advanced scenarios, but it is not the front door.
 
 ## Shared Harness Model
 
@@ -94,6 +94,18 @@ What they do:
 - `sync-harness.sh`: projects canonical `.harness/` content into Claude and Codex runtime files
 
 ## Quick Start
+
+### How to install a harness in a project
+
+For normal usage: yes, ask the recruiter.
+
+1. Install the recruiter skill/agent in your project (Claude quick install below).
+2. Run `/recruit`.
+3. Approve the proposed team and harness setup.
+4. Run `/recruit govern` if you want governance rules generated.
+5. Run `/recruit update` over time to keep the setup current.
+
+Use the scripts only if you are doing manual/advanced setup or working directly from a clone of this repo.
 
 ### Claude-only quick install
 
@@ -264,6 +276,6 @@ Commit style follows conventional commits:
 
 ## Changes
 
-Durable change history lives in [CHANGES.md](/home/mathias/dev/agent-roster/CHANGES.md).
+Durable change history lives in [CHANGES.md](CHANGES.md).
 
 Temporary updater-facing release notes may appear inside installable prompts during migration windows, but the repo-level history belongs in `CHANGES.md`.
