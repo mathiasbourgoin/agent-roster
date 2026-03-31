@@ -20,7 +20,7 @@ tunables:
   require_interface_files: false    # For languages with separate interface files (OCaml .mli, C .h)
 requires: []
 isolation: none
-version: 1.1.0
+version: 1.2.0
 author: mathiasbourgoin
 source: Adapted from an OCaml/dune project's architecture guardian agent
 ---
@@ -37,11 +37,36 @@ Ensure the project builds cleanly on the PR branch. If the project has an archit
 
 ### Step 2 — Metrics comparison
 
-If the project has metrics tooling:
+**If `metrics_command` is configured:** Run it and compare against baseline.
 
-1. Generate current metrics on the PR branch.
-2. Generate baseline metrics from main (or use the CI baseline if available).
-3. Compare. **Any regression in tracked metrics is a blocker.**
+**If no metrics tool is configured (default):** Run built-in checks:
+
+1. **File size:** Find files exceeding `max_file_lines`:
+   ```bash
+   find . -name '*.ml' -o -name '*.py' -o -name '*.ts' -o -name '*.rs' -o -name '*.go' | xargs wc -l | sort -rn | head -20
+   ```
+   Flag any file exceeding the configured `max_file_lines` (default 500).
+
+2. **Function length:** Use grep to find long function bodies:
+   ```bash
+   # Adapt pattern to project language — examples:
+   # OCaml: grep -n "^let " src/**/*.ml
+   # Python: grep -n "^def \|^class " **/*.py
+   # TypeScript: grep -n "function \|=> {" **/*.ts
+   ```
+   Flag any function exceeding `max_function_lines` (default 50).
+
+3. **Duplication:** Search for near-duplicate function names or similar code blocks:
+   ```bash
+   grep -rn "^let \|^def \|^func \|function " --include='*.ml' --include='*.py' --include='*.ts' --include='*.go' | awk -F: '{print $3}' | sort | uniq -c | sort -rn | head -10
+   ```
+
+4. **Doc coverage:** Check for public APIs without documentation:
+   ```bash
+   # Language-specific — check for exported functions missing doc comments
+   ```
+
+**KB integration:** When `kb/properties.md` exists, check that listed invariants are preserved by the PR changes.
 
 Common tracked metrics (adapt to project):
 

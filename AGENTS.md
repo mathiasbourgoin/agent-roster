@@ -2,35 +2,126 @@
 
 ## Project
 
-A curated registry of reusable Claude Code agent definitions paired with a recruiter meta-agent that assembles, audits, and evolves project teams.
+A curated registry of reusable Claude Code agent definitions, skills, rules, and hooks — paired with a harness builder that assembles complete Claude Code configurations and a recruiter that finds optimal agent teams.
 
 ## Conventions
 
 - **Commit convention:** conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
 - **Issue tracker:** GitHub
 - **Branch strategy:** feature branches → PR → merge to main
-- **Versioning:** semver on each agent (`version:` frontmatter field) — bump on any behavioral change
+- **Versioning:** semver on each component (`version:` frontmatter field)
+  - Patch (x.x.+1): typo/wording, no behavioral change
+  - Minor (x.+1.0): new capabilities, backward compatible
+  - Major (+1.0.0): breaking changes (rewritten workflow, renamed tunables)
 
-## Agent Definitions
+## Component Types
 
-All agents live in `agents/<domain>/` or `recruiter/`. They follow the schema in `schema/agent-schema.md`.
+| Type | Schema | Location | Install target |
+|------|--------|----------|---------------|
+| Agent | `schema/agent-schema.md` | `agents/<domain>/` | `.claude/agents/` |
+| Skill | `schema/skill-schema.md` | `skills/<domain>/` | `.claude/commands/` |
+| Rule | `schema/rule-schema.md` | `rules/<category>/` | `.claude/rules/` |
+| Hook | `schema/hook-schema.md` | `hooks/<category>/` | `settings.json` hooks section |
+| KB | `schema/kb-schema.md` | `kb/` | `kb/` |
+| Harness | `schema/harness-schema.md` | — | `.claude/harness.json` |
 
-When modifying an agent:
-1. Bump its `version` field (patch for fixes, minor for new behavior)
-2. Run `./scripts/build-index.sh > index.json` to update the index
-3. Update README.md agent table if the description changed
+## Agents (17)
 
-## Adding a New Agent
+### Management (8)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| tech-lead | 1.3.0 | opus | Orchestrates teams, enforces Ralph Loop with tiered evaluation |
+| recruiter | 1.3.0 | opus | Finds and assembles agent teams from roster + external sources |
+| harness-builder | 1.0.0 | opus | Assembles complete harness configs (agents + rules + hooks + skills + KB) |
+| governor | 2.0.0 | opus | Generates .claude/rules/ via Socratic dialogue, enforces KB properties |
+| kb-agent | 2.0.0 | opus | Bootstraps, maintains, and audits the knowledge base (kb/) |
+| skill-creator | 1.1.0 | opus | Creates reusable skills from MCP servers, CLI tools, or ideas |
+| architect | 1.2.0 | sonnet | Code quality guardian with built-in metric fallbacks + KB integration |
+| context-manager | 1.0.0 | haiku | Maintains shared context document across multi-agent workflows |
 
-1. Create `agents/<domain>/<agent-name>.md` following `schema/agent-schema.md`
-2. Run `./scripts/build-index.sh > index.json`
-3. Add a row to the README agent table
-4. Open a PR
+### Backend (1)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| implementer | 1.0.0 | sonnet | Implements features/fixes in isolated worktrees |
 
-Preferred path: use the recruiter's Mode 4 — it handles creation, local install, and PR in one step.
+### Testing (2)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| reviewer | 1.1.0 | opus | Structured code review with security focus |
+| qa | 1.0.0 | haiku | Test verification + optional Playwright manual testing |
+
+### DevOps (2)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| tool-provisioner | 1.1.0 | sonnet | MCP/CLI discovery, evaluation, and provisioning |
+| performance-monitor | 1.0.0 | sonnet | CI/test/app performance profiling |
+
+### Security (1)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| mcp-vetter | 1.1.0 | sonnet | Security vetting of MCP server candidates |
+
+### Specialist (2)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| expert-debugger | 1.0.0 | opus | Escalation agent for hard diagnostic problems |
+| config-migrator | 1.0.0 | sonnet | One-shot env→pydantic-settings migration (Python) |
+
+### Other (1)
+| Agent | Version | Model | Purpose |
+|-------|---------|-------|---------|
+| error-coordinator | 1.1.0 | sonnet | Correlates failures across CI/tests/agents |
+
+## Skills (7)
+
+| Skill | Domain | Purpose |
+|-------|--------|---------|
+| tdd-workflow | testing | Red-green-refactor with auto language detection |
+| git-conventions | workflow | Conventional commits, branch naming, PR templates |
+| kb-update | kb | Maintain KB after code changes, flag spec contradictions |
+| ambiguity-auditor | kb/audit | Scan KB for gaps, contradictions, vague language |
+| code-quality-auditor | kb/audit | Check code against KB properties and naming |
+| spec-compliance-auditor | kb/audit | Compare implementation against kb/spec.md |
+| harness-validator | kb/audit | Meta-audit: is the harness coherent? |
+
+## Rules (3)
+
+| Rule | Category | Scope |
+|------|----------|-------|
+| sycophancy | safety | global |
+| escalation | safety | global |
+| code-quality | style | global |
+
+## Hooks (2)
+
+| Hook | Event | Matcher |
+|------|-------|---------|
+| block-dangerous-commands | PreToolUse | Bash |
+| post-edit-lint | PostToolUse | Edit\|Write |
 
 ## Pipeline & Governance
 
-The tech-lead orchestrates all agents. No agent provisions tools, creates skills, or installs MCP servers without going through the tech-lead → tool-provisioner → mcp-vetter pipeline.
+The **harness builder** orchestrates complete harness assembly by coordinating:
+- **Recruiter** → agent team
+- **Governor** → rules
+- **Tool provisioner** → MCP servers (vetted by **mcp-vetter**)
+- **Skill creator** → skills
+- **KB agent** → knowledge base
 
-See `agents/management/tech-lead.md` for the full governance model.
+The **tech-lead** enforces the **Ralph Loop** during implementation:
+1. Establish evaluation criteria (Tier 1: deterministic, Tier 2: LLM-assessed)
+2. Implementer implements
+3. Tier 1 checks (tests, build, lint, auditors) — non-negotiable
+4. Tier 2 assessments (reviewer, architect) — grounded in Tier 1 outputs
+5. QA validates → merge
+
+No agent provisions tools or creates skills without tech-lead approval.
+
+## Adding Components
+
+Use the recruiter's Mode 4 (agent creation) or skill-creator for the full workflow. Manual:
+
+1. Create file following the appropriate schema
+2. Run `./scripts/build-index.sh > index.json`
+3. Update this file
+4. Open a PR
