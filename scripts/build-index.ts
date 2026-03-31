@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 
 type ComponentType = "agent" | "skill" | "rule" | "hook" | "kb" | "other";
 
@@ -740,10 +741,33 @@ function sortEntries(entries: IndexEntry[]): IndexEntry[] {
   });
 }
 
+async function mapLimit<T, R>(
+  items: T[],
+  limit: number,
+  mapper: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const out = new Array<R>(items.length);
+  let nextIndex = 0;
+
+  async function worker(): Promise<void> {
+    while (nextIndex < items.length) {
+      const current = nextIndex;
+      nextIndex += 1;
+      out[current] = await mapper(items[current], current);
+    }
+  }
+
+  const concurrency = Math.max(1, Math.min(limit, items.length));
+  const workers = Array.from({ length: concurrency }, async () => worker());
+  await Promise.all(workers);
+  return out;
+}
+
 type SourceCache = {
   source_id: string;
   source_repo: string;
   built_at: string;
+  source_fingerprint?: string;
   entries: IndexEntry[];
 };
 
@@ -770,6 +794,7 @@ async function writeSourceCache(
   cacheDir: string,
   sourceId: string,
   sourceRepo: string,
+  sourceFingerprint: string | undefined,
   sourceEntries: IndexEntry[],
 ): Promise<void> {
   await fs.mkdir(cacheDir, { recursive: true });
@@ -777,9 +802,18 @@ async function writeSourceCache(
     source_id: sourceId,
     source_repo: sourceRepo,
     built_at: new Date().toISOString(),
+    source_fingerprint: sourceFingerprint,
     entries: sourceEntries,
   };
   await fs.writeFile(sourceCacheFile(cacheDir, sourceId), `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+}
+
+function fingerprintParts(parts: string[]): string {
+  return createHash("sha256").update(parts.join("\n"), "utf8").digest("hex");
+}
+
+function fingerprintCandidates(sourceId: string, branch: string, candidates: string[]): string {
+  return fingerprintParts([sourceId, branch, ...candidates]);
 }
 
 async function run(): Promise<void> {
@@ -832,30 +866,62 @@ async function run(): Promise<void> {
       const sourceEntries: IndexEntry[] = [];
       if (candidates.length === 0) {
         const catalogEntries = await collectCatalogEntries(remote);
+        const catalogFingerprint = fingerprintParts([remote.id, branch, ...catalogEntries.map((entry) => entry.path).sort()]);
+        if (cached && cached.length > 0) {
+          const raw = await fs.readFile(sourceCacheFile(cacheDir, remote.id), "utf8");
+          const parsed = JSON.parse(raw) as SourceCache;
+          if (parsed.source_fingerprint === catalogFingerprint) {
+            for (const item of cached) {
+              entries.push(item);
+              stats.remote_count += 1;
+            }
+            continue;
+          }
+        }
         for (const item of catalogEntries) {
           sourceEntries.push(item);
         }
+        const sortedSourceEntries = sortEntries(sourceEntries);
+        for (const item of sortedSourceEntries) {
+          entries.push(item);
+          stats.remote_count += 1;
+        }
+        await writeSourceCache(cacheDir, remote.id, remote.repo, catalogFingerprint, sortedSourceEntries);
+        continue;
       }
-      for (const filePath of candidates) {
+      const sourceFingerprint = fingerprintCandidates(remote.id, branch, candidates);
+      if (cached && cached.length > 0) {
+        const raw = await fs.readFile(sourceCacheFile(cacheDir, remote.id), "utf8");
+        const parsed = JSON.parse(raw) as SourceCache;
+        if (parsed.source_fingerprint === sourceFingerprint) {
+          for (const item of cached) {
+            entries.push(item);
+            stats.remote_count += 1;
+          }
+          continue;
+        }
+      }
+      const parsedEntries = await mapLimit(candidates, 16, async (filePath) => {
         const url = toRawUrl(remote.repo, branch, filePath);
         const content = await fetchText(url);
         const fm = parseFrontmatter(content) ?? parseLooseMetadata(content);
         if (fm) {
           const entry = normalizeEntry(fm, filePath, "remote", remote.id, remote.repo);
           if (entry) {
-            sourceEntries.push(enrichRemoteEntry(entry, content));
-            continue;
+            return enrichRemoteEntry(entry, content);
           }
         }
-        const fallback = fallbackRemoteEntry(content, filePath, remote.id, remote.repo);
-        sourceEntries.push(fallback);
+        return fallbackRemoteEntry(content, filePath, remote.id, remote.repo);
+      });
+      for (const item of parsedEntries) {
+        sourceEntries.push(item);
       }
       const sortedSourceEntries = sortEntries(sourceEntries);
       for (const item of sortedSourceEntries) {
         entries.push(item);
         stats.remote_count += 1;
       }
-      await writeSourceCache(cacheDir, remote.id, remote.repo, sortedSourceEntries);
+      await writeSourceCache(cacheDir, remote.id, remote.repo, sourceFingerprint, sortedSourceEntries);
     } catch (error) {
       if (cached && cached.length > 0) {
         for (const item of cached) {

@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "commonjs",
   "scripts": {
-    "build:index": "npm run build:ts -- --pretty false && node dist/scripts/build-index.js",
+    "build:index": "node scripts/run-build-index.js",
     "build:ts": "tsc -p tsconfig.json"
   },
   "devDependencies": {
