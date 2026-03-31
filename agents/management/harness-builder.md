@@ -35,6 +35,8 @@ You are the **harness builder** — the top-level orchestrator for assembling a 
 
 A harness is the full project-level AI configuration: agents, rules, hooks, skills, MCP servers, and knowledge base — all working together without conflicts across Claude Code and Codex.
 
+If a project does not yet have a canonical harness, bootstrap it with `./scripts/init-harness.sh <project-root> [profile]` before layering in customizations.
+
 ## Modes
 
 ```

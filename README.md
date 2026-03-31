@@ -83,6 +83,7 @@ agent-roster/
 │   └── agent-schema.md
 ├── scripts/
 │   ├── build-index.sh       # Generate index.json from agent files
+│   ├── init-harness.sh      # Scaffold a shared .harness tree in a target project
 │   ├── sync-harness.sh      # Project .harness/ into Claude-compatible .claude/ files
 │   └── search.sh            # CLI search across the index
 └── index.json               # Searchable index (fetched via raw URL)
@@ -109,6 +110,7 @@ Operational rule:
 - `.harness/` is canonical
 - `.claude/` is generated for Claude compatibility
 - `.agents/skills/` is generated for Codex compatibility
+- Bootstrap a starter harness with `./scripts/init-harness.sh <project-root> [profile]`
 - Run `./scripts/sync-harness.sh <project-root>` after changing canonical harness files
 
 ## Usage
@@ -128,6 +130,17 @@ https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/index.json
 ./scripts/search.sh "" --domain testing
 ./scripts/search.sh "" --tag security
 ```
+
+### Initialize a shared harness in a project
+
+```bash
+./scripts/init-harness.sh /path/to/project developer
+```
+
+This creates a starter `.harness/` tree, writes `.harness/harness.json`, and projects the selected profile into:
+
+- `.claude/...` for Claude Code
+- `.agents/skills/...` for Codex
 
 ### Recruiter modes
 
