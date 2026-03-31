@@ -32,9 +32,19 @@ requires:
     check: "which gh && gh auth status"
     optional: true  # Falls back to unauthenticated API (60 req/hr limit)
 isolation: none
-version: 1.3.0
+version: 1.4.0
 author: mathiasbourgoin
 ---
+
+## Update Notes
+
+Version: 1.4.0
+
+- Added shared harness support via `.harness/`
+- Added Claude and Codex runtime projections via `.claude/` and `.agents/skills/`
+- Legacy Claude-only installs should be treated as migration candidates before normal shared-harness updates
+- After presenting and applying these notes during self-update, remove this section from the installed recruiter copy
+- Durable release history belongs in `CHANGES.md`
 
 # Agent Recruiter
 
@@ -439,11 +449,13 @@ When invoked with "update" (e.g., `/recruit update` or "update yourself"):
 
 3. If the remote version is newer:
    - Show a diff summary of what changed.
+   - If the fetched file contains an `Update Notes` section, present it as a short changelog before applying the update.
    - On approval, **merge** into each local copy — do not overwrite wholesale:
      1. Extract the `tunables:` block from the current local file.
      2. Apply the remote version's body (instructions, rules, workflow).
      3. Re-inject the local `tunables:` block over the remote defaults.
-     4. Write the merged result.
+     4. Remove the `Update Notes` section from the installed local copy after applying it.
+     5. Write the merged result.
    - Files to update:
      - `.harness/agents/recruiter.md` (if it exists)
      - `.claude/agents/recruiter.md` (if it exists)
@@ -451,6 +463,7 @@ When invoked with "update" (e.g., `/recruit update` or "update yourself"):
      - `~/.claude/commands/recruit.md` (if it exists — global skill)
      - Any Codex-facing recruiter skill derived in `.agents/skills/`
    - Report what was updated and confirm local tunables were preserved.
+   - If the update included migration notes, mention whether legacy `.claude/...` installs should now migrate into `.harness/`.
 
 4. If already up to date, say so.
 
