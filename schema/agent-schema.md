@@ -17,6 +17,8 @@ compatible_with: [<string>, ...]  # Platforms: claude-code, codex, cursor, aider
 ---
 ```
 
+`model` remains required for backward compatibility with the current roster index and Claude-oriented install path. If an agent needs runtime-specific model recommendations, add them through optional metadata rather than overloading the core workflow.
+
 ## Optional Frontmatter Fields
 
 ```yaml
@@ -28,6 +30,16 @@ requires:                    # Tool and MCP server dependencies
     install: <string>        # Install command or instructions (optional)
     check: <string>          # Command to verify it's available (optional)
     optional: <bool>         # If true, agent works without it but with reduced capability
+runtime_hints:               # Optional runtime-specific recommendations
+  claude-code:
+    model: <string>
+  codex:
+    model: <string>
+entrypoints:                 # Optional runtime-specific thin wrappers
+  claude-code:
+    type: <agent|command|rule|hook>
+  codex:
+    type: <agent|skill|cli|agents-md>
 isolation: <worktree|none>   # Whether the agent needs an isolated workspace
 replaces: [<agent-name>, ...] # Agents this one supersedes (for upgrade proposals)
 version: <semver>            # Version for tracking updates
@@ -42,7 +54,10 @@ After the frontmatter, the markdown body should contain:
 1. **Role description** — Who is this agent? What's its mission?
 2. **Workflow** — Step-by-step process the agent follows
 3. **Rules** — Hard constraints and invariants
-4. **Output format** — Expected deliverable structure (if applicable)
+4. **Runtime notes** — Claude-only or Codex-only invocation details, isolated from the core workflow
+5. **Output format** — Expected deliverable structure (if applicable)
+
+The main workflow should stay runtime-neutral whenever possible. Do not hard-code `.claude/...` paths in the core behavior unless the agent is truly Claude-only.
 
 ## Example
 

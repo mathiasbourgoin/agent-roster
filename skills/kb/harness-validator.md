@@ -25,19 +25,19 @@ Verify the integrity of the knowledge base harness: KB structure, installed audi
   - `spec-compliance-auditor.md`
   - `harness-validator.md` (self)
 - Check each has valid frontmatter with `description`.
-- Verify installed copies exist in `.claude/commands/` (if install has been run).
+- Verify installed copies exist in `.harness/skills/` and any Claude compatibility copies in `.claude/commands/` (if install has been run).
 - Flag missing auditors as Critical.
 
 ### 3. Check: Rules Coherence
 
-- Read `.claude/rules/` directory for all rule files.
+- Read `.harness/rules/` first, then `.claude/rules/` compatibility copies if present.
 - Read agent definitions (e.g., `agents/` directory or `AGENTS.md`).
 - Verify: rules reference KB files that exist, agent instructions don't contradict rules, no orphaned rules referencing deleted agents.
 - Flag contradictions as Critical. Flag orphaned rules as Warning.
 
 ### 4. Check: Hook Configuration
 
-- Read `.claude/settings.json` (or equivalent config) for hooks.
+- Read `.harness/hooks/` and any runtime hook projection such as `.claude/settings.json`.
 - Verify hooks don't block tools that agents need (e.g., a pre-commit hook that blocks Bash would break all agents).
 - Check that hook commands reference valid scripts/paths.
 - Flag blocking hooks as Critical. Flag missing expected hooks as Info.

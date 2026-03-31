@@ -1,6 +1,6 @@
 # Hook Definition Schema
 
-Hooks are markdown files that define automated behaviors triggered by Claude Code events. Each hook lives in `hooks/<category>/<name>.md` and is installed by merging into `.claude/settings.json` (or `.claude/settings.local.json`) under the `hooks` key.
+Hooks are markdown files that define automated behaviors triggered by assistant runtime events. Each hook lives in `hooks/<category>/<name>.md` and is installed into the shared harness before being projected into runtime-specific configuration.
 
 ## Required Frontmatter
 
@@ -28,8 +28,8 @@ version: <semver>            # Version for tracking updates (e.g., 1.0.0)
 |----------------------|-----------------------------------------------|
 | `PreToolUse`         | Before a tool call executes (can block it)     |
 | `PostToolUse`        | After a tool call completes                    |
-| `SessionStart`       | When a Claude Code session begins              |
-| `Stop`               | When Claude finishes its turn                  |
+| `SessionStart`       | When an assistant session begins               |
+| `Stop`               | When the runtime finishes its turn             |
 | `SessionEnd`         | When a session is terminated                   |
 | `PostToolUseFailure` | After a tool call fails                        |
 
@@ -126,4 +126,7 @@ exit 0
 
 ## Install Behavior
 
-The installer reads the `command` code block, serializes it as a single-line command, and merges it into the `hooks` key of `.claude/settings.json`. Multiple hooks for the same event+matcher are appended to the `hooks` array.
+The canonical installer should place the hook in `.harness/hooks/<name>.md`, then render runtime-specific hook configuration:
+
+- Claude Code: serialize the `command` block and merge it into `.claude/settings.json` or `.claude/settings.local.json`
+- Other runtimes: project the same hook intent into the nearest equivalent mechanism, or mark it unsupported if no equivalent exists
