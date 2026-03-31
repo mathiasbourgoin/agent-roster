@@ -203,7 +203,7 @@
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code", "codex"],
-    "version": "1.3.0",
+    "version": "1.4.0",
     "path": "recruiter/recruiter.md"
   }
 ]
