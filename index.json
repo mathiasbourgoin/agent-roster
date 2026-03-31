@@ -6859,30 +6859,6 @@
     "component_type": "other"
   },
   {
-    "name": "agent-activation-prompts",
-    "display_name": "🎯 NEXUS Agent Activation Prompts",
-    "description": "> Ready-to-use prompt templates for activating any agent within the NEXUS pipeline. Copy, customize the `[PLACEHOLDERS]`, and deploy.",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "agent",
-      "activation",
-      "prompts",
-      "strategy",
-      "coordination"
-    ],
-    "model": "unspecified",
-    "complexity": "high",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/coordination/agent-activation-prompts.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
     "name": "Agentic Identity & Trust Architect",
     "display_name": "Agentic Identity & Trust Architect",
     "description": "Designs identity, authentication, and trust verification systems for autonomous AI agents operating in multi-agent environments. Ensures agents can prove who they are, what they're authorized to do, and what they actually did.",
@@ -7185,35 +7161,6 @@
     ],
     "version": "1.0.0",
     "path": "engineering/engineering-backend-architect.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "Backend Architect",
-    "display_name": "Backend Architect",
-    "description": "Senior backend architect specializing in scalable system design, database architecture, API development, and cloud infrastructure. Builds robust, secure, performant server-side applications and microservices",
-    "domain": [
-      "mcp",
-      "memory"
-    ],
-    "tags": [
-      "mcp",
-      "memory",
-      "backend",
-      "architect",
-      "with",
-      "integrations",
-      "other"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [
-      "claude-code"
-    ],
-    "version": "1.0.0",
-    "path": "integrations/mcp-memory/backend-architect-with-memory.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",
@@ -8014,28 +7961,6 @@
     "component_type": "other"
   },
   {
-    "name": "executive-brief",
-    "display_name": "📑 NEXUS Executive Brief",
-    "description": "The Agency comprises specialized AI agents across 9 divisions — engineering, design, marketing, product, project management, testing, support, spatial computing, and specialized operations. Individually, each agent delivers expert-level out",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "executive",
-      "brief",
-      "strategy"
-    ],
-    "model": "unspecified",
-    "complexity": "low",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/EXECUTIVE-BRIEF.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
     "name": "Experiment Tracker",
     "display_name": "Experiment Tracker",
     "description": "Expert project manager specializing in experiment design, execution tracking, and data-driven decision making. Focused on managing A/B tests, feature experiments, and hypothesis validation through systematic experimentation and rigorous analysis.",
@@ -8499,29 +8424,6 @@
     ],
     "version": "1.0.0",
     "path": "marketing/marketing-growth-hacker.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "handoff-templates",
-    "display_name": "📋 NEXUS Handoff Templates",
-    "description": "> Standardized templates for every type of agent-to-agent handoff in the NEXUS pipeline. Consistent handoffs prevent context loss — the #1 cause of multi-agent coordination failure.",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "handoff",
-      "templates",
-      "strategy",
-      "coordination"
-    ],
-    "model": "unspecified",
-    "complexity": "high",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/coordination/handoff-templates.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",
@@ -9120,27 +9022,6 @@
     "component_type": "other"
   },
   {
-    "name": "nexus-strategy",
-    "display_name": "🌐 NEXUS — Network of EXperts, Unified in Strategy",
-    "description": "> **NEXUS** transforms The Agency's independent AI specialists into a synchronized intelligence network. This is not a prompt collection — it is a **deployment doctrine** that turns The Agency into a force multiplier for any project, produc",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "nexus",
-      "strategy"
-    ],
-    "model": "unspecified",
-    "complexity": "high",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/nexus-strategy.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
     "name": "Outbound Strategist",
     "display_name": "Outbound Strategist",
     "description": "Signal-based outbound specialist who designs multi-channel prospecting sequences, defines ICPs, and builds pipeline through research-driven personalization — not volume.",
@@ -9238,173 +9119,6 @@
     ],
     "version": "1.0.0",
     "path": "testing/testing-performance-benchmarker.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-0-discovery",
-    "display_name": "🔍 Phase 0 Playbook — Intelligence & Discovery",
-    "description": "> **Duration**: 3-7 days | **Agents**: 6 | **Gate Keeper**: Executive Summary Generator",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "0",
-      "discovery",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-0-discovery.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-1-strategy",
-    "display_name": "🏗️ Phase 1 Playbook — Strategy & Architecture",
-    "description": "> **Duration**: 5-10 days | **Agents**: 8 | **Gate Keepers**: Studio Producer + Reality Checker",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "1",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-1-strategy.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-2-foundation",
-    "display_name": "⚙️ Phase 2 Playbook — Foundation & Scaffolding",
-    "description": "> **Duration**: 3-5 days | **Agents**: 6 | **Gate Keepers**: DevOps Automator + Evidence Collector",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "2",
-      "foundation",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-2-foundation.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-3-build",
-    "display_name": "🔨 Phase 3 Playbook — Build & Iterate",
-    "description": "> **Duration**: 2-12 weeks (varies by scope) | **Agents**: 15-30+ | **Gate Keeper**: Agents Orchestrator",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "3",
-      "build",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "high",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-3-build.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-4-hardening",
-    "display_name": "🛡️ Phase 4 Playbook — Quality & Hardening",
-    "description": "> **Duration**: 3-7 days | **Agents**: 8 | **Gate Keeper**: Reality Checker (sole authority)",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "4",
-      "hardening",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "high",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-4-hardening.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-5-launch",
-    "display_name": "🚀 Phase 5 Playbook — Launch & Growth",
-    "description": "> **Duration**: 2-4 weeks (T-7 through T+14) | **Agents**: 12 | **Gate Keepers**: Studio Producer + Analytics Reporter",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "5",
-      "launch",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-5-launch.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "phase-6-operate",
-    "display_name": "🔄 Phase 6 Playbook — Operate & Evolve",
-    "description": "> **Duration**: Ongoing | **Agents**: 12+ (rotating) | **Governance**: Studio Producer",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "phase",
-      "6",
-      "operate",
-      "strategy",
-      "playbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "high",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/playbooks/phase-6-operate.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",
@@ -9640,27 +9354,6 @@
     "component_type": "other"
   },
   {
-    "name": "quickstart",
-    "display_name": "⚡ NEXUS Quick-Start Guide",
-    "description": "> **Get from zero to orchestrated multi-agent pipeline in 5 minutes.**",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "quickstart",
-      "strategy"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/QUICKSTART.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
     "name": "Rapid Prototyper",
     "display_name": "Rapid Prototyper",
     "description": "Specialized in ultra-fast proof-of-concept development and MVP creation using efficient tools and frameworks",
@@ -9680,27 +9373,6 @@
     ],
     "version": "1.0.0",
     "path": "engineering/engineering-rapid-prototyper.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "readme",
-    "display_name": "Examples",
-    "description": "This directory contains example outputs demonstrating how the agency's agents can be orchestrated together to tackle real-world tasks.",
-    "domain": [
-      "examples"
-    ],
-    "tags": [
-      "readme",
-      "examples"
-    ],
-    "model": "unspecified",
-    "complexity": "low",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "examples/README.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",
@@ -9826,30 +9498,6 @@
   },
   {
     "name": "readme",
-    "display_name": "MCP Memory Integration",
-    "description": "> Give any agent persistent memory across sessions using the Model Context Protocol (MCP).",
-    "domain": [
-      "mcp",
-      "memory"
-    ],
-    "tags": [
-      "readme",
-      "integrations",
-      "mcp",
-      "memory"
-    ],
-    "model": "unspecified",
-    "complexity": "low",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "integrations/mcp-memory/README.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "readme",
     "display_name": "OpenClaw Integration",
     "description": "OpenClaw agents are installed as workspaces containing `SOUL.md`, `AGENTS.md`,",
     "domain": [
@@ -9865,27 +9513,6 @@
     "compatible_with": [],
     "version": "1.0.0-external",
     "path": "integrations/openclaw/README.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "readme",
-    "display_name": "🔌 Integrations",
-    "description": "This directory contains The Agency integrations and converted formats for",
-    "domain": [
-      "readme"
-    ],
-    "tags": [
-      "readme",
-      "integrations"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "integrations/README.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",
@@ -10197,102 +9824,6 @@
     ],
     "version": "1.0.0",
     "path": "specialized/specialized-salesforce-architect.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "scenario-enterprise-feature",
-    "display_name": "🏢 Runbook: Enterprise Feature Development",
-    "description": "> **Mode**: NEXUS-Sprint | **Duration**: 6-12 weeks | **Agents**: 20-30",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "scenario",
-      "enterprise",
-      "feature",
-      "strategy",
-      "runbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/runbooks/scenario-enterprise-feature.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "scenario-incident-response",
-    "display_name": "🚨 Runbook: Incident Response",
-    "description": "> **Mode**: NEXUS-Micro | **Duration**: Minutes to hours | **Agents**: 3-8",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "scenario",
-      "incident",
-      "response",
-      "strategy",
-      "runbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/runbooks/scenario-incident-response.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "scenario-marketing-campaign",
-    "display_name": "📢 Runbook: Multi-Channel Marketing Campaign",
-    "description": "> **Mode**: NEXUS-Micro to NEXUS-Sprint | **Duration**: 2-4 weeks | **Agents**: 10-15",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "scenario",
-      "marketing",
-      "campaign",
-      "strategy",
-      "runbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/runbooks/scenario-marketing-campaign.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "scenario-startup-mvp",
-    "display_name": "🚀 Runbook: Startup MVP Build",
-    "description": "> **Mode**: NEXUS-Sprint | **Duration**: 4-6 weeks | **Agents**: 18-22",
-    "domain": [
-      "strategy"
-    ],
-    "tags": [
-      "scenario",
-      "startup",
-      "mvp",
-      "strategy",
-      "runbooks"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "strategy/runbooks/scenario-startup-mvp.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",
@@ -11501,98 +11032,6 @@
     ],
     "version": "1.0.0",
     "path": "testing/testing-workflow-optimizer.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "workflow-book-chapter",
-    "display_name": "Workflow Example: Book Chapter Development",
-    "description": "> A focused single-agent workflow for turning rough source material into a strategic first-person chapter draft with explicit revision loops.",
-    "domain": [
-      "examples"
-    ],
-    "tags": [
-      "workflow",
-      "book",
-      "chapter",
-      "examples"
-    ],
-    "model": "unspecified",
-    "complexity": "low",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "examples/workflow-book-chapter.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "workflow-landing-page",
-    "display_name": "Multi-Agent Workflow: Landing Page Sprint",
-    "description": "> Ship a conversion-optimized landing page in one day using 4 agents.",
-    "domain": [
-      "examples"
-    ],
-    "tags": [
-      "workflow",
-      "landing",
-      "page",
-      "examples"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "examples/workflow-landing-page.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "workflow-startup-mvp",
-    "display_name": "Multi-Agent Workflow: Startup MVP",
-    "description": "> A step-by-step example of how to coordinate multiple agents to go from idea to shipped MVP.",
-    "domain": [
-      "examples"
-    ],
-    "tags": [
-      "workflow",
-      "startup",
-      "mvp",
-      "examples"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "examples/workflow-startup-mvp.md",
-    "source": "remote",
-    "source_id": "msitarzewski/agency-agents",
-    "source_repo": "msitarzewski/agency-agents",
-    "component_type": "other"
-  },
-  {
-    "name": "workflow-with-memory",
-    "display_name": "Multi-Agent Workflow: Startup MVP with Persistent Memory",
-    "description": "> The same startup MVP workflow from [workflow-startup-mvp.md](workflow-startup-mvp.md), but with an MCP memory server handling state between agents. No more copy-paste handoffs.",
-    "domain": [
-      "examples"
-    ],
-    "tags": [
-      "workflow",
-      "with",
-      "memory",
-      "examples"
-    ],
-    "model": "unspecified",
-    "complexity": "medium",
-    "compatible_with": [],
-    "version": "1.0.0-external",
-    "path": "examples/workflow-with-memory.md",
     "source": "remote",
     "source_id": "msitarzewski/agency-agents",
     "source_repo": "msitarzewski/agency-agents",

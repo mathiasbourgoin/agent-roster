@@ -776,7 +776,7 @@ function sourceCacheFile(cacheDir: string, sourceId: string): string {
   return path.join(cacheDir, `${key}.json`);
 }
 
-async function readSourceCache(cacheDir: string, sourceId: string): Promise<IndexEntry[] | null> {
+async function readSourceCacheRecord(cacheDir: string, sourceId: string): Promise<SourceCache | null> {
   const filePath = sourceCacheFile(cacheDir, sourceId);
   try {
     const raw = await fs.readFile(filePath, "utf8");
@@ -784,7 +784,7 @@ async function readSourceCache(cacheDir: string, sourceId: string): Promise<Inde
     if (!Array.isArray(parsed.entries)) {
       return null;
     }
-    return parsed.entries;
+    return parsed;
   } catch {
     return null;
   }
@@ -814,6 +814,26 @@ function fingerprintParts(parts: string[]): string {
 
 function fingerprintCandidates(sourceId: string, branch: string, candidates: string[]): string {
   return fingerprintParts([sourceId, branch, ...candidates]);
+}
+
+function appendRemoteEntries(allEntries: IndexEntry[], stats: BuildStats, sourceEntries: IndexEntry[]): void {
+  for (const item of sourceEntries) {
+    allEntries.push(item);
+    stats.remote_count += 1;
+  }
+}
+
+function chooseBestSourceEntries(cached: SourceCache | null, refreshed: IndexEntry[]): IndexEntry[] {
+  if (!cached || cached.entries.length === 0) {
+    return refreshed;
+  }
+  if (refreshed.length === 0) {
+    return cached.entries;
+  }
+  if (refreshed.length < Math.floor(cached.entries.length * 0.95)) {
+    return cached.entries;
+  }
+  return refreshed;
 }
 
 async function run(): Promise<void> {
@@ -853,12 +873,9 @@ async function run(): Promise<void> {
 
   for (const remote of sourceConfig.remotes ?? []) {
     const branch = remote.branch ?? "main";
-    const cached = await readSourceCache(cacheDir, remote.id);
-    if (!args.refreshRemotes && cached && cached.length > 0) {
-      for (const item of cached) {
-        entries.push(item);
-        stats.remote_count += 1;
-      }
+    const cached = await readSourceCacheRecord(cacheDir, remote.id);
+    if (!args.refreshRemotes && cached && cached.entries.length > 0) {
+      appendRemoteEntries(entries, stats, cached.entries);
       continue;
     }
     try {
@@ -867,39 +884,23 @@ async function run(): Promise<void> {
       if (candidates.length === 0) {
         const catalogEntries = await collectCatalogEntries(remote);
         const catalogFingerprint = fingerprintParts([remote.id, branch, ...catalogEntries.map((entry) => entry.path).sort()]);
-        if (cached && cached.length > 0) {
-          const raw = await fs.readFile(sourceCacheFile(cacheDir, remote.id), "utf8");
-          const parsed = JSON.parse(raw) as SourceCache;
-          if (parsed.source_fingerprint === catalogFingerprint) {
-            for (const item of cached) {
-              entries.push(item);
-              stats.remote_count += 1;
-            }
-            continue;
-          }
+        if (cached && cached.entries.length > 0 && cached.source_fingerprint === catalogFingerprint) {
+          appendRemoteEntries(entries, stats, cached.entries);
+          continue;
         }
         for (const item of catalogEntries) {
           sourceEntries.push(item);
         }
         const sortedSourceEntries = sortEntries(sourceEntries);
-        for (const item of sortedSourceEntries) {
-          entries.push(item);
-          stats.remote_count += 1;
-        }
-        await writeSourceCache(cacheDir, remote.id, remote.repo, catalogFingerprint, sortedSourceEntries);
+        const chosenEntries = chooseBestSourceEntries(cached, sortedSourceEntries);
+        appendRemoteEntries(entries, stats, chosenEntries);
+        await writeSourceCache(cacheDir, remote.id, remote.repo, catalogFingerprint, chosenEntries);
         continue;
       }
       const sourceFingerprint = fingerprintCandidates(remote.id, branch, candidates);
-      if (cached && cached.length > 0) {
-        const raw = await fs.readFile(sourceCacheFile(cacheDir, remote.id), "utf8");
-        const parsed = JSON.parse(raw) as SourceCache;
-        if (parsed.source_fingerprint === sourceFingerprint) {
-          for (const item of cached) {
-            entries.push(item);
-            stats.remote_count += 1;
-          }
-          continue;
-        }
+      if (cached && cached.entries.length > 0 && cached.source_fingerprint === sourceFingerprint) {
+        appendRemoteEntries(entries, stats, cached.entries);
+        continue;
       }
       const parsedEntries = await mapLimit(candidates, 16, async (filePath) => {
         const url = toRawUrl(remote.repo, branch, filePath);
@@ -917,20 +918,15 @@ async function run(): Promise<void> {
         sourceEntries.push(item);
       }
       const sortedSourceEntries = sortEntries(sourceEntries);
-      for (const item of sortedSourceEntries) {
-        entries.push(item);
-        stats.remote_count += 1;
-      }
-      await writeSourceCache(cacheDir, remote.id, remote.repo, sourceFingerprint, sortedSourceEntries);
+      const chosenEntries = chooseBestSourceEntries(cached, sortedSourceEntries);
+      appendRemoteEntries(entries, stats, chosenEntries);
+      await writeSourceCache(cacheDir, remote.id, remote.repo, sourceFingerprint, chosenEntries);
     } catch (error) {
-      if (cached && cached.length > 0) {
-        for (const item of cached) {
-          entries.push(item);
-          stats.remote_count += 1;
-        }
+      if (cached && cached.entries.length > 0) {
+        appendRemoteEntries(entries, stats, cached.entries);
         if (!args.quiet) {
           console.error(
-            `warning: source ${remote.id} failed live fetch, used cache (${cached.length} entries): ${(error as Error).message}`,
+            `warning: source ${remote.id} failed live fetch, used cache (${cached.entries.length} entries): ${(error as Error).message}`,
           );
         }
       } else {
