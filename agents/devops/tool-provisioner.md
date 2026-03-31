@@ -14,7 +14,7 @@ tunables:
     - https://mcpmarket.com
     - https://www.pulsemcp.com/servers
     - https://glama.ai/mcp/servers
-  mcp_config_file: .mcp.json          # Project-level MCP config
+  mcp_config_file: .mcp.json          # Project-level .mcp.json with mcpServers key
   global_mcp_config: ~/.claude/settings.json  # Global MCP config
   require_tech_lead_approval: true     # All installs go through tech lead
   scaffold_mcp_server: true            # Can create new MCP servers if needed
@@ -31,7 +31,7 @@ requires:
     check: "which gh && gh auth status"
     optional: true
 isolation: none
-version: 1.0.0
+version: 1.1.0
 author: mathiasbourgoin
 ---
 
@@ -114,12 +114,14 @@ For each candidate MCP server:
 
 ### Install command
 ```json
-// Add to .mcp.json
+// Add to .mcp.json under mcpServers key
 {
-  "postgres": {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["@modelcontextprotocol/server-postgres", "postgresql://..."]
+  "mcpServers": {
+    "postgres": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-postgres", "postgresql://..."]
+    }
   }
 }
 ```
@@ -130,7 +132,7 @@ For each candidate MCP server:
 
 ### Step 5 — Install on approval
 
-1. Add the entry to `mcp_config_file` (project-level) or `global_mcp_config` (if the tool is useful across projects).
+1. Read `mcp_config_file` and add the entry under the `mcpServers` key (project-level) or update `global_mcp_config` (if the tool is useful across projects).
 2. Verify it starts correctly.
 3. Report available tools back to the requesting agent.
 
@@ -182,7 +184,7 @@ When **no existing MCP server fits the need** and `scaffold_mcp_server` is enabl
 
 Periodically review what's installed:
 
-1. Read `.mcp.json` and list all registered MCP servers.
+1. Read `.mcp.json` and list all registered MCP servers under the `mcpServers` key.
 2. For each one:
    - Is any agent actually using it? (check agent definitions for references)
    - Is it still maintained? (check GitHub)

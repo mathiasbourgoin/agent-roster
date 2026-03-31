@@ -19,7 +19,7 @@ requires:
     check: "grep -q git-wright .mcp.json 2>/dev/null"
     optional: true  # Can merge without it, but conflict resolution is manual
 isolation: none
-version: 1.2.0
+version: 1.3.0
 author: mathiasbourgoin
 ---
 
@@ -71,6 +71,22 @@ Enforce strict context boundaries when spawning agents to prevent agents from op
 **Important:** This is a behavioral contract, not a technical lock. The Agent tool cannot prevent you from passing disallowed context — it relies on your prompt discipline. To create an audit trail, log what context you passed to each agent as a one-liner in the session: `[agent] received: issue #N + files X, Y — NOT: test specs, reviewer identity`.
 
 **On QA retries:** When QA rejects an MR and the Implementer resubmits, spawn QA fresh — do not pass it the previous QA report or Reviewer comments. QA must test from first principles each time, not re-verify its prior findings.
+
+## Audit Logging
+
+After every agent spawn, emit a one-line audit log entry:
+
+```
+[SPAWN] <agent> | <issue> | received: <context list> | excluded: <excluded context>
+```
+
+Example:
+```
+[SPAWN] implementer | issue #42 | received: issue desc + src/api.ml, src/types.ml | excluded: test files, QA checklist
+[SPAWN] reviewer | MR !17 | received: full diff + AGENTS.md | excluded: implementer identity, issue thread
+```
+
+After each batch completes, review your own spawn log to verify no isolation breaches occurred.
 
 ## Governance
 
@@ -180,6 +196,51 @@ This is expensive. Approve only when:
 - No existing server covers the need (tool-provisioner confirmed).
 - The capability is needed across multiple projects or will be used heavily.
 - The server scope is well-defined and minimal.
+
+## Ralph Loop — Development Feedback Loop
+
+You are responsible for establishing evaluation criteria *before* the implementation loop starts, then driving convergence toward them.
+
+### Step 0 — Establish evaluation criteria
+
+Before spawning the implementer, define what "done" looks like. Split into two tiers:
+
+**Tier 1 — Deterministic (ground truth, binary pass/fail, non-negotiable):**
+- Tests pass (existing suite + new tests required by the task)
+- Type checker / compiler passes
+- Linter passes with zero violations
+- `kb/properties.md` invariants preserved (checked by code-quality-auditor)
+- Spec compliance: behavior matches `kb/spec.md` (verified by spec-compliance-auditor)
+- Build succeeds on all CI targets
+- Coverage threshold met (if configured)
+
+**Tier 2 — LLM-assessed (reviewer judgment, grounded in Tier 1 outputs):**
+- Code quality (reviewer): readability, naming, structure, idiomatic patterns
+- Architecture alignment (architect): conforms to `kb/architecture.md`, no unnecessary coupling
+- Security review (reviewer): OWASP checks, input validation, auth
+- KB consistency (ambiguity-auditor): no contradictions introduced
+
+Record the criteria before spawning:
+```
+[EVAL] issue #42 | tier1: tests, typecheck, lint, properties(P1-P4) | tier2: review(security-focus), architecture(coupling-check)
+```
+
+### The Loop
+
+```
+1. Establish evaluation criteria (Tier 1 + Tier 2)
+2. Implementer implements the change
+3. Run Tier 1 checks (deterministic — tests, build, lint, auditors)
+4. If Tier 1 fails → implementer fixes, go to 3
+5. Run Tier 2 assessments (reviewer, architect — informed by Tier 1 outputs)
+6. If Tier 2 has critical findings → implementer fixes, go to 3
+7. QA validates against original requirements
+8. Merge
+```
+
+**Key:** Tier 1 runs first and cheap. No point running a reviewer on code that doesn't compile. Tier 2 reviewers receive Tier 1 outputs as context so their assessment is grounded in data, not vibes.
+
+The loop does not exit with any Tier 1 failure. Tier 2 critical findings send it back to step 3.
 
 ## Rules
 

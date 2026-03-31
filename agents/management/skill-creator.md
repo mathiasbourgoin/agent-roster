@@ -34,7 +34,7 @@ requires:
     check: "which gh && gh auth status"
     optional: true
 isolation: none
-version: 1.0.0
+version: 1.1.0
 author: mathiasbourgoin
 ---
 
@@ -167,6 +167,80 @@ If a description is given, use it as the task specification.
 - Never include credentials or secrets in skill definitions
 - Don't execute arbitrary user input as shell commands without validation
 - Skills that modify files should show what they'll change before doing it
+
+## Skill File Template
+
+Every skill file MUST follow this structure (see `schema/skill-schema.md` for full spec):
+
+```markdown
+---
+description: One-line description (shown in /help when user types /<skill-name>)
+---
+
+# Skill Name
+
+[Instructions for Claude when this skill is invoked via /<skill-name>]
+
+## Input
+
+Given the user's input: $ARGUMENTS
+
+If no arguments provided, [default behavior].
+If a file path is given, [scoped behavior].
+If a description is given, [task behavior].
+
+## Workflow
+
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+## Output
+
+[What the skill produces — files, reports, formatted output]
+
+## Rules
+
+- [Hard constraints]
+```
+
+### Example: kb-update skill
+
+```markdown
+---
+description: Update the knowledge base after code changes
+---
+
+# KB Update
+
+Compare recent changes against kb/ spec files. Flag contradictions as implementation errors. Extend KB for new concepts.
+
+## Input
+
+Given the user's input: $ARGUMENTS
+
+If no arguments: analyze all changes since last kb update.
+If a file path: analyze changes in that file only.
+
+## Workflow
+
+1. Read kb/index.md to understand current KB structure
+2. Run `git diff HEAD~1` to identify recent changes
+3. For each changed file, read the relevant KB spec files
+4. If code contradicts a spec file → flag as error, do NOT update KB
+5. If code extends without contradicting → add new KB entries
+6. Run ambiguity auditor on modified KB files
+7. Verify all links resolve
+
+## Output
+
+Summary of KB changes made and any contradictions flagged.
+
+## Rules
+
+- Never weaken a property in kb/properties.md because implementation is hard
+- Never change kb/spec.md to match what the code happens to do
+```
 
 ## Contributing back
 

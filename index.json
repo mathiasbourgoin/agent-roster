@@ -1,8 +1,9 @@
 [
   {
+    "type": "agent",
     "name": "implementer",
     "display_name": "Implementer",
-    "description": "Implementation agent — takes an issue or task description, works in an isolated git worktree, writes the code, and opens a merge/pull request. Designed to be spawned multiple times in parallel.",
+    "description": "Implementation agent — takes an issue or task description, works in an isolated git worktree, writes the code, and opens a merge/pull request.",
     "domain": ["backend", "implementation"],
     "tags": ["coding", "feature", "bugfix", "worktree", "parallel", "merge-request"],
     "model": "sonnet",
@@ -10,51 +11,51 @@
     "compatible_with": ["claude-code", "codex"],
     "version": "1.0.0",
     "path": "agents/backend/implementer.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "performance-monitor",
     "display_name": "Performance Monitor",
     "description": "Monitors application and CI performance — profiles slow tests, identifies build bottlenecks, tracks response times, and proposes concrete optimizations.",
     "domain": ["devops", "performance"],
-    "tags": ["performance", "profiling", "monitoring", "ci-optimization", "benchmarking", "bottleneck"],
+    "tags": ["performance", "profiling", "monitoring", "ci-optimization", "benchmarking"],
     "model": "sonnet",
     "complexity": "medium",
     "compatible_with": ["claude-code"],
     "version": "1.0.0",
     "path": "agents/devops/performance-monitor.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "tool-provisioner",
     "display_name": "Tool Provisioner",
-    "description": "Discovers, evaluates, and provisions MCP servers, CLI tools, and skills for the agent team. Searches registries before installing. Can also scaffold new MCP servers when no existing one fits. All requests go through the tech lead for validation.",
+    "description": "Discovers, evaluates, and provisions MCP servers, CLI tools, and skills for the agent team. Searches registries before installing.",
     "domain": ["devops", "meta"],
-    "tags": ["mcp", "tool-discovery", "provisioning", "mcp-servers", "cli-tools", "installation", "scaffolding"],
-    "model": "sonnet",
-    "complexity": "medium",
-    "compatible_with": ["claude-code"],
-    "version": "1.0.0",
-    "path": "agents/devops/tool-provisioner.md"
-  }
-,
-  {
-    "name": "architect",
-    "display_name": "Architect",
-    "description": "Code quality and architecture guardian — runs code health checks, audits for metric regressions, duplication, missing docs, and enforces structural rules. Blocks PRs that would degrade codebase health.",
-    "domain": ["management", "quality"],
-    "tags": ["architecture", "code-quality", "metrics", "duplication", "documentation", "structural-review", "guardian"],
+    "tags": ["mcp", "tool-discovery", "provisioning", "mcp-servers", "cli-tools", "installation"],
     "model": "sonnet",
     "complexity": "medium",
     "compatible_with": ["claude-code"],
     "version": "1.1.0",
-    "path": "agents/management/architect.md"
-  }
-,
+    "path": "agents/devops/tool-provisioner.md"
+  },
   {
+    "type": "agent",
+    "name": "architect",
+    "display_name": "Architect",
+    "description": "Code quality and architecture guardian — runs code health checks, audits for metric regressions, duplication, missing docs, and enforces structural rules.",
+    "domain": ["management", "quality"],
+    "tags": ["architecture", "code-quality", "metrics", "duplication", "documentation", "guardian"],
+    "model": "sonnet",
+    "complexity": "medium",
+    "compatible_with": ["claude-code"],
+    "version": "1.2.0",
+    "path": "agents/management/architect.md"
+  },
+  {
+    "type": "agent",
     "name": "context-manager",
     "display_name": "Context Manager",
-    "description": "Maintains shared context across multi-agent workflows — keeps a living document of decisions, findings, and state so agents don't duplicate work or contradict each other.",
+    "description": "Maintains shared context across multi-agent workflows — keeps a living document of decisions, findings, and state.",
     "domain": ["management", "orchestration"],
     "tags": ["context", "shared-state", "coordination", "knowledge-sharing", "multi-agent"],
     "model": "haiku",
@@ -62,74 +63,87 @@
     "compatible_with": ["claude-code"],
     "version": "1.0.0",
     "path": "agents/management/context-manager.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "error-coordinator",
     "display_name": "Error Coordinator",
-    "description": "Investigates recurring failures across the agent team — correlates errors from CI, tests, and agent runs, identifies root causes, and proposes fixes or workflow changes.",
+    "description": "Investigates recurring failures — correlates errors from CI, tests, and agent runs, identifies root causes, and proposes fixes.",
     "domain": ["management", "debugging"],
-    "tags": ["error-analysis", "debugging", "ci-failures", "root-cause", "correlation", "resilience"],
+    "tags": ["error-analysis", "debugging", "ci-failures", "root-cause", "correlation"],
     "model": "sonnet",
     "complexity": "medium",
     "compatible_with": ["claude-code"],
     "version": "1.1.0",
     "path": "agents/management/error-coordinator.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "governor",
     "display_name": "Governor",
-    "description": "Audits and governs a Claude Code project's AI configuration — generates modular .claude/rules/ files, refactors bloated CLAUDE.md, and installs anti-sycophancy and escalation standards through a focused Socratic dialogue.",
+    "description": "Audits and governs a Claude Code project's AI configuration — generates modular .claude/rules/ files through focused Socratic dialogue. Reads kb/properties.md to enforce project invariants.",
     "domain": ["management", "governance"],
-    "tags": ["governance", "rules", "anti-sycophancy", "escalation", "claude-rules", "claude-md", "project-hygiene", "calibration"],
+    "tags": ["governance", "rules", "anti-sycophancy", "escalation", "claude-rules", "calibration"],
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
-    "version": "1.0.0",
-    "path": "agents/management/governor.md"
-  }
-,
+    "version": "2.0.0",
+    "path": "governor/governor.md"
+  },
   {
-    "name": "knowledge-synthesizer",
-    "display_name": "Knowledge Synthesizer",
-    "description": "Extracts patterns and lessons from completed agent work — reviews merged MRs, closed issues, and agent reports to distill reusable knowledge back into project docs and agent definitions.",
-    "domain": ["management", "documentation"],
-    "tags": ["knowledge-management", "patterns", "lessons-learned", "documentation", "retrospective"],
-    "model": "sonnet",
-    "complexity": "medium",
-    "compatible_with": ["claude-code", "codex"],
-    "version": "1.0.0",
-    "path": "agents/management/knowledge-synthesizer.md"
-  }
-,
+    "type": "agent",
+    "name": "kb-agent",
+    "display_name": "KB Agent",
+    "description": "Bootstraps, maintains, and audits a structured knowledge base (kb/) that serves as the project's source of truth. The KB defines intent; code implements it.",
+    "domain": ["management", "knowledge"],
+    "tags": ["knowledge-base", "kb", "source-of-truth", "bootstrap", "audit", "ralph-loop", "spec"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "2.0.0",
+    "path": "agents/management/kb-agent.md"
+  },
   {
+    "type": "agent",
     "name": "skill-creator",
     "display_name": "Skill Creator",
-    "description": "Creates reusable Claude Code skills from MCP servers, CLI tools, or ideas. Searches existing skill registries before creating. Can be triggered by agents who notice repeated manual workflows.",
+    "description": "Creates reusable Claude Code skills from MCP servers, CLI tools, or ideas. Searches existing skill registries before creating.",
     "domain": ["management", "meta"],
-    "tags": ["skills", "slash-commands", "automation", "mcp", "cli", "workflow-extraction", "self-improvement"],
+    "tags": ["skills", "slash-commands", "automation", "mcp", "cli", "workflow-extraction"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.1.0",
+    "path": "agents/management/skill-creator.md"
+  },
+  {
+    "type": "agent",
+    "name": "tech-lead",
+    "display_name": "Tech Lead",
+    "description": "Orchestrates agent teams — triages issues, plans batches, coordinates implementation/review/QA pipeline, enforces Ralph Loop with tiered evaluation criteria.",
+    "domain": ["management", "orchestration"],
+    "tags": ["team-lead", "triage", "merge-sequencing", "governance", "batch-planning", "ralph-loop"],
+    "model": "opus",
+    "complexity": "high",
+    "compatible_with": ["claude-code"],
+    "version": "1.3.0",
+    "path": "agents/management/tech-lead.md"
+  },
+  {
+    "type": "agent",
+    "name": "harness-builder",
+    "display_name": "Harness Builder",
+    "description": "Orchestrates complete harness assembly — coordinates recruiter, governor, tool-provisioner, skill-creator, and KB agent to build a coherent Claude Code configuration.",
+    "domain": ["management", "meta"],
+    "tags": ["harness", "configuration", "orchestration", "setup", "profiles", "coherence"],
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
     "version": "1.0.0",
-    "path": "agents/management/skill-creator.md"
-  }
-,
+    "path": "agents/management/harness-builder.md"
+  },
   {
-    "name": "tech-lead",
-    "display_name": "Tech Lead",
-    "description": "Orchestrates agent teams — triages issues, plans batches, coordinates implementation/review/QA pipeline, owns merge process and project governance documents.",
-    "domain": ["management", "orchestration"],
-    "tags": ["team-lead", "triage", "merge-sequencing", "governance", "batch-planning"],
-    "model": "opus",
-    "complexity": "high",
-    "compatible_with": ["claude-code"],
-    "version": "1.2.0",
-    "path": "agents/management/tech-lead.md"
-  }
-,
-  {
+    "type": "agent",
     "name": "mcp-vetter",
     "display_name": "MCP Security Vetter",
     "description": "Vets MCP server candidates for security risks before tech-lead approval — checks source reputation, declared permissions, package registry signals, and code patterns.",
@@ -140,12 +154,12 @@
     "compatible_with": ["claude-code"],
     "version": "1.1.0",
     "path": "agents/security/mcp-vetter.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "config-migrator",
     "display_name": "Config Migrator",
-    "description": "One-shot specialist for migrating scattered os.environ.get() calls to a centralized pydantic-settings Settings class. Audits, catalogs, replaces, and validates all configuration access.",
+    "description": "One-shot specialist for migrating scattered os.environ.get() calls to a centralized pydantic-settings Settings class.",
     "domain": ["specialist", "refactoring"],
     "tags": ["pydantic-settings", "config", "migration", "env-vars", "one-shot"],
     "model": "sonnet",
@@ -153,25 +167,25 @@
     "compatible_with": ["claude-code"],
     "version": "1.0.0",
     "path": "agents/specialist/config-migrator.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "expert-debugger",
     "display_name": "Expert Debugger",
-    "description": "Senior escalation agent for hard problems — diagnoses difficult build failures, dependency conflicts, subtle API breaks, and architectural dead-ends. Returns a clear diagnosis and fix plan without implementing the fix.",
+    "description": "Senior escalation agent for hard problems — diagnoses difficult build failures, dependency conflicts, subtle API breaks, and architectural dead-ends.",
     "domain": ["specialist", "debugging"],
-    "tags": ["expert", "diagnosis", "build-failures", "dependency-conflicts", "escalation", "root-cause"],
+    "tags": ["expert", "diagnosis", "build-failures", "dependency-conflicts", "escalation"],
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
     "version": "1.0.0",
     "path": "agents/specialist/expert-debugger.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "qa",
     "display_name": "QA Tester",
-    "description": "QA engineer — runs existing tests, writes new test cases for changed code, and performs manual testing via Playwright against the running local environment.",
+    "description": "QA engineer — runs existing tests, writes new test cases, and performs manual testing via Playwright.",
     "domain": ["testing", "qa"],
     "tags": ["testing", "regression", "playwright", "manual-testing", "test-gaps"],
     "model": "haiku",
@@ -179,12 +193,12 @@
     "compatible_with": ["claude-code"],
     "version": "1.0.0",
     "path": "agents/testing/qa.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "reviewer",
     "display_name": "Code Reviewer",
-    "description": "Thorough code reviewer — examines merge requests for correctness, security, edge cases, and style. Returns structured feedback with required/optional classifications.",
+    "description": "Thorough code reviewer — examines merge requests for correctness, security, edge cases, and style with required/optional classifications.",
     "domain": ["testing", "review"],
     "tags": ["code-review", "security-review", "merge-request", "feedback"],
     "model": "opus",
@@ -192,18 +206,136 @@
     "compatible_with": ["claude-code", "codex", "cursor"],
     "version": "1.1.0",
     "path": "agents/testing/reviewer.md"
-  }
-,
+  },
   {
+    "type": "agent",
     "name": "recruiter",
     "display_name": "Agent Recruiter",
-    "description": "Meta-agent that analyzes a project, searches agent sources (personal roster + public registries), and assembles or updates an optimal agent team. Can audit existing teams and propose upgrades.",
+    "description": "Meta-agent that analyzes a project, searches agent sources, and assembles or updates an optimal agent team. Discovers new roster agents on self-update.",
     "domain": ["management", "meta"],
     "tags": ["recruiter", "team-building", "agent-discovery", "roster-management", "auto-upgrade"],
     "model": "opus",
     "complexity": "high",
     "compatible_with": ["claude-code"],
-    "version": "1.2.0",
+    "version": "1.3.0",
     "path": "recruiter/recruiter.md"
+  },
+  {
+    "type": "skill",
+    "name": "tdd-workflow",
+    "description": "Red-green-refactor TDD cycle with auto language detection and coverage verification.",
+    "domain": ["testing"],
+    "tags": ["tdd", "testing", "red-green-refactor", "coverage"],
+    "version": "1.0.0",
+    "path": "skills/testing/tdd-workflow.md"
+  },
+  {
+    "type": "skill",
+    "name": "git-conventions",
+    "description": "Conventional commits, branch naming, and PR templates.",
+    "domain": ["workflow"],
+    "tags": ["git", "commits", "branches", "pr-template", "conventions"],
+    "version": "1.0.0",
+    "path": "skills/workflow/git-conventions.md"
+  },
+  {
+    "type": "skill",
+    "name": "kb-update",
+    "description": "Update the knowledge base after code changes. Flags spec contradictions.",
+    "domain": ["kb"],
+    "tags": ["knowledge-base", "kb", "update", "spec-compliance", "source-of-truth"],
+    "version": "1.0.0",
+    "path": "skills/kb/kb-update.md"
+  },
+  {
+    "type": "skill",
+    "name": "ambiguity-auditor",
+    "description": "Scans KB for gaps, contradictions, undefined terms, and vague language.",
+    "domain": ["kb", "audit"],
+    "tags": ["auditor", "ambiguity", "kb", "glossary", "contradictions", "staleness"],
+    "version": "1.0.0",
+    "path": "skills/kb/ambiguity-auditor.md"
+  },
+  {
+    "type": "skill",
+    "name": "code-quality-auditor",
+    "description": "Checks implementation against KB-defined properties, naming, and size limits.",
+    "domain": ["kb", "audit"],
+    "tags": ["auditor", "code-quality", "properties", "invariants", "naming", "dry"],
+    "version": "1.0.0",
+    "path": "skills/kb/code-quality-auditor.md"
+  },
+  {
+    "type": "skill",
+    "name": "spec-compliance-auditor",
+    "description": "Compares implementation against kb/spec.md. Flags divergence and missing features.",
+    "domain": ["kb", "audit"],
+    "tags": ["auditor", "spec", "compliance", "divergence", "verification"],
+    "version": "1.0.0",
+    "path": "skills/kb/spec-compliance-auditor.md"
+  },
+  {
+    "type": "skill",
+    "name": "harness-validator",
+    "description": "Meta-auditor: checks that KB, skills, rules, and CLAUDE.md form a coherent harness.",
+    "domain": ["kb", "audit"],
+    "tags": ["auditor", "harness", "coherence", "ralph-loop", "meta-audit"],
+    "version": "1.0.0",
+    "path": "skills/kb/harness-validator.md"
+  },
+  {
+    "type": "rule",
+    "name": "sycophancy",
+    "description": "Anti-sycophancy checks — challenge assumptions, never agree just to be agreeable.",
+    "domain": ["safety"],
+    "tags": ["anti-sycophancy", "honesty", "feedback", "challenge"],
+    "scope": "global",
+    "category": "safety",
+    "version": "1.0.0",
+    "path": "rules/safety/sycophancy.md"
+  },
+  {
+    "type": "rule",
+    "name": "escalation",
+    "description": "Default escalation triggers — pause for human approval on destructive or external actions.",
+    "domain": ["safety"],
+    "tags": ["escalation", "approval", "destructive-ops", "safety"],
+    "scope": "global",
+    "category": "safety",
+    "version": "1.0.0",
+    "path": "rules/safety/escalation.md"
+  },
+  {
+    "type": "rule",
+    "name": "code-quality",
+    "description": "Universal code quality limits — file size, function size, nesting depth, naming.",
+    "domain": ["common"],
+    "tags": ["code-quality", "limits", "naming", "dead-code", "nesting"],
+    "scope": "global",
+    "category": "style",
+    "version": "1.0.0",
+    "path": "rules/common/code-quality.md"
+  },
+  {
+    "type": "hook",
+    "name": "block-dangerous-commands",
+    "description": "PreToolUse/Bash hook blocking rm -rf, force push, DROP TABLE, chmod 777, curl|sh.",
+    "domain": ["safety"],
+    "tags": ["safety", "blocking", "destructive", "bash", "pre-tool-use"],
+    "event": "PreToolUse",
+    "matcher": "Bash",
+    "version": "1.0.0",
+    "path": "hooks/safety/block-dangerous-commands.md"
+  },
+  {
+    "type": "hook",
+    "name": "post-edit-lint",
+    "description": "PostToolUse/Edit hook running project linter with auto-detection.",
+    "domain": ["quality"],
+    "tags": ["lint", "quality", "auto-format", "post-tool-use", "edit"],
+    "event": "PostToolUse",
+    "matcher": "Edit|Write",
+    "version": "1.0.0",
+    "path": "hooks/quality/post-edit-lint.md"
   }
 ]
