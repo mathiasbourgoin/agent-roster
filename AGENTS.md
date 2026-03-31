@@ -135,6 +135,6 @@ When the installed harness changes, project-local agents should update canonical
 Use the recruiter's Mode 4 (agent creation) or skill-creator for the full workflow. Manual:
 
 1. Create file following the appropriate schema
-2. Run `./scripts/build-index.sh > index.json`
+2. Run `npm run build:index`
 3. Update this file
 4. Open a PR

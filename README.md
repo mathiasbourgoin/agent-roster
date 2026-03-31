@@ -82,14 +82,15 @@ The data model is shared. Runtime surfaces are generated.
 The repo includes three key scripts:
 
 ```bash
-./scripts/build-index.sh > index.json
+npm run build:index
 ./scripts/init-harness.sh /path/to/project [profile]
 ./scripts/sync-harness.sh /path/to/project
 ```
 
 What they do:
 
-- `build-index.sh`: rebuilds the searchable roster index
+- `build:index`: rebuilds `index.json` from local + configured remote sources
+- `build:index -- --refresh-remotes`: refreshes remote snapshots before rebuilding
 - `init-harness.sh`: bootstraps a starter `.harness/` tree in a target project
 - `sync-harness.sh`: projects canonical `.harness/` content into Claude and Codex runtime files
 

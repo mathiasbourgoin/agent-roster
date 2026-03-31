@@ -8,7 +8,7 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 INDEX="$REPO_ROOT/index.json"
 
 if [ ! -f "$INDEX" ]; then
-    echo "Index not found. Run ./scripts/build-index.sh > index.json first." >&2
+    echo "Index not found. Run npm run build:index first." >&2
     exit 1
 fi
 

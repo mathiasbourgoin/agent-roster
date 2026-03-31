@@ -1,0 +1,94 @@
+{
+  "local": {
+    "enabled": true,
+    "repo": "mathiasbourgoin/agent-roster"
+  },
+  "remotes": [
+    {
+      "id": "VoltAgent/awesome-claude-code-subagents",
+      "repo": "VoltAgent/awesome-claude-code-subagents",
+      "branch": "main",
+      "seed_files": [
+        "README.md"
+      ],
+      "include_patterns": [
+        "^categories/.+\\.md$"
+      ],
+      "exclude_patterns": [
+        "^README\\.md$"
+      ]
+    },
+    {
+      "id": "VoltAgent/awesome-agent-skills",
+      "repo": "VoltAgent/awesome-agent-skills",
+      "branch": "main",
+      "seed_files": [
+        "README.md"
+      ],
+      "include_patterns": [
+        "^(skills|categories)/.+\\.md$"
+      ],
+      "exclude_patterns": [
+        "^README\\.md$"
+      ]
+    },
+    {
+      "id": "wshobson/agents",
+      "repo": "wshobson/agents",
+      "branch": "main",
+      "seed_files": [
+        "README.md"
+      ],
+      "include_patterns": [
+        "^agents/.+\\.md$",
+        "^plugins/.+/(agents|commands|skills)/.+\\.md$"
+      ],
+      "exclude_patterns": [
+        "^README\\.md$"
+      ]
+    },
+    {
+      "id": "heilcheng/awesome-agent-skills",
+      "repo": "heilcheng/awesome-agent-skills",
+      "branch": "main",
+      "seed_files": [
+        "README.md"
+      ],
+      "include_patterns": [
+        "^(skills|categories|agents)/.+\\.md$"
+      ],
+      "exclude_patterns": [
+        "^README\\.md$"
+      ]
+    },
+    {
+      "id": "msitarzewski/agency-agents",
+      "repo": "msitarzewski/agency-agents",
+      "branch": "main",
+      "seed_files": [
+        "README.md"
+      ],
+      "include_patterns": [
+        "^(integrations/claude-code|[a-zA-Z0-9_-]+)/.+\\.md$"
+      ],
+      "exclude_patterns": [
+        "^README\\.md$"
+      ]
+    },
+    {
+      "id": "mk-knight23/AGENTS-COLLECTION",
+      "repo": "mk-knight23/AGENTS-COLLECTION",
+      "branch": "main",
+      "seed_files": [
+        "README.md"
+      ],
+      "include_patterns": [
+        "^AGENTS/claude-code/.+\\.md$",
+        "^AGENTS/AGENCY-SOURCE/.+\\.md$"
+      ],
+      "exclude_patterns": [
+        "^README\\.md$"
+      ]
+    }
+  ]
+}

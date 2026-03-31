@@ -8,40 +8,30 @@ model: opus
 complexity: high
 compatible_with: [claude-code, codex]
 tunables:
-  roster_repo: mathiasbourgoin/agent-roster  # GitHub <owner>/<repo> — fetched via API, no local clone needed
-  external_sources:
-    - https://github.com/VoltAgent/awesome-claude-code-subagents
-    - https://github.com/VoltAgent/awesome-agent-skills
-    - https://github.com/wshobson/agents
-    - https://github.com/heilcheng/awesome-agent-skills
-    - https://github.com/msitarzewski/agency-agents
-    - https://github.com/mk-knight23/AGENTS-COLLECTION
+  roster_repo: mathiasbourgoin/agent-roster  # GitHub <owner>/<repo>
+  index_sources_file: index-sources.json     # deterministic remote source config consumed by TS indexer
+  index_build_command: npm run build:index   # must write index.json to disk before search
   max_team_size: 10
   auto_install: false          # If true, writes agents directly; if false, proposes and waits for approval
   audit_existing: true         # Check existing agents and propose upgrades
 requires:
-  - name: web-search
-    type: builtin
-    optional: false  # Cannot search external sources without this
-  - name: web-fetch
-    type: builtin
-    optional: false  # Cannot read external agent definitions without this
   - name: gh
     type: cli
     install: "https://cli.github.com/"
     check: "which gh && gh auth status"
-    optional: true  # Falls back to unauthenticated API (60 req/hr limit)
+    optional: true
 isolation: none
-version: 1.4.0
+version: 1.5.0
 author: mathiasbourgoin
 ---
 
 ## Update Notes
 
-Version: 1.4.0
+Version: 1.5.0
 
 - Added shared harness support via `.harness/`
 - Added Claude and Codex runtime projections via `.claude/` and `.agents/skills/`
+- Switched discovery to deterministic file-first indexing (`npm run build:index` + `index-sources.json`)
 - Legacy Claude-only installs should be treated as migration candidates before normal shared-harness updates
 - After presenting and applying these notes during self-update, remove this section from the installed recruiter copy
 - Durable release history belongs in `CHANGES.md`
@@ -79,8 +69,9 @@ Equivalent Codex entrypoints may differ, but they must drive the same underlying
    If `.harness/harness.json` exists, read it to understand the current harness configuration. If only `.claude/harness.json` exists, treat it as a compatibility view and migrate toward the shared manifest. Use this context when proposing agents — prefer agents that complement the existing harness layers.
 
 2. **Search agent sources (in priority order):**
-   a. **Personal roster** (`roster_repo`) — check `agents/` directory and `index.json`. These are curated and preferred.
-   b. **External sources** — fetch README/index from each URL in `external_sources`. Parse agent listings. Match by domain and tags against project needs.
+   a. **Rebuild index first** using `index_build_command` so `index.json` is fresh.
+   b. **Read unified `index.json`** (local roster + deterministic remote entries from `index_sources_file`).
+   c. **Prefer personal roster** entries first, then use remote entries as alternatives.
 
 3. **Rank candidates** using a scored algorithm. Compute a score for each candidate and sort descending:
 
@@ -269,7 +260,7 @@ Before installing any agent, check its `requires` field and resolve dependencies
 
 For each proposed agent, collect all entries from its `requires` list. Group by type:
 - **mcp**: MCP servers that need to be registered in `.mcp.json` or `~/.claude/settings.json`
-- **builtin**: Claude built-in tools (web-search, web-fetch, etc.) — just verify they're available
+- **builtin**: runtime built-in tools — verify availability in the active runtime
 - **cli**: External CLI tools that need to be installed on the system
 
 ### Step 2 — Check what's already available
@@ -293,8 +284,7 @@ Include a dependency section in the team proposal:
 ### Required (agent won't function without these)
 | Tool | Type | Needed by | Status | Install |
 |------|------|-----------|--------|---------|
-| web-search | builtin | recruiter | available | — |
-| web-fetch | builtin | recruiter | available | — |
+| [depends on selected agents] | builtin | [agent name] | [status] | — |
 
 ### Optional (agent works without, but with reduced capability)
 | Tool | Type | Needed by | Status | Install |
@@ -326,72 +316,23 @@ When installing an agent from any source, always adapt it to the project:
 
 ## Search Strategy
 
-### Personal roster (fast path)
-Fetch the index and agent files from the `roster_repo` GitHub repo:
-1. Fetch `index.json`:
-   ```
-   https://raw.githubusercontent.com/<roster_repo>/main/index.json
-   ```
-   Or via gh CLI: `gh api repos/<roster_repo>/contents/index.json --jq '.content' | base64 -d`
-2. Filter by domain, tags, and complexity.
-3. Fetch full agent `.md` files for shortlisted candidates:
-   ```
-   https://raw.githubusercontent.com/<roster_repo>/main/<agent-path>
-   ```
+### Deterministic file-first discovery
+Use index artifacts, not ad-hoc remote crawling.
 
-### External sources (deep search)
+1. Run `index_build_command` in the roster repo context (or fetch the already-built `index.json` from `roster_repo`).
+2. Read `index.json` and filter entries by role/domain/tags/compatibility.
+3. Prefer `source == local` candidates when scores are close.
+4. For shortlisted candidates only, fetch full `.md` definitions by `path` to verify details before final recommendation.
 
-External repos contain dozens to hundreds of agent definitions. You MUST do a thorough crawl, not just skim the README.
-
-**Rate limit awareness:** Unauthenticated GitHub API calls are limited to 60/hour. Use `gh api` when available (authenticated, 5000/hour) or batch requests efficiently.
-
-#### Step 1: Get the full directory tree
-
-```bash
-# Preferred: authenticated via gh CLI
-gh api repos/<owner>/<repo>/git/trees/main?recursive=1 --jq '.tree[].path'
-
-# Fallback: unauthenticated
-# https://api.github.com/repos/<owner>/<repo>/git/trees/main?recursive=1
-```
-
-This gives you every file path in the repo.
-
-#### Step 2: Identify agent definition files
-
-Filter the tree for `.md` files in directories like `agents/`, `subagents/`, `skills/`, `categories/`, or similar. Also check for index/catalog files (`index.json`, `agents.yaml`, `catalog.md`).
-
-Known repo structures:
-- **VoltAgent/awesome-claude-code-subagents**: `categories/<NN>-<domain>/<agent-name>.md`
-- **VoltAgent/awesome-agent-skills**: check README for structure
-- **wshobson/agents**: `agents/<domain>/<agent-name>.md`
-- **msitarzewski/agency-agents**: `<domain>/<agent-name>.md` — 144+ agents across 12 domains (engineering, testing, marketing, product, design, etc.); check `integrations/claude-code/` for Claude Code-specific variants first
-- **mk-knight23/AGENTS-COLLECTION**: two-layer structure — canonical definitions at `AGENCY-SOURCE/<DOMAIN>/<agent-name>.md`; Claude Code-optimized variants at `AGENTS/claude-code/<agent-name>.md` — **always prefer the Claude Code variant** when it exists; 700+ total definitions, 68 canonical agents
-
-#### Step 3: Read full agent definitions
-
-```
-https://raw.githubusercontent.com/<owner>/<repo>/main/<path>
-```
-
-Do NOT rely solely on README summaries — they are often incomplete or outdated. Read the actual agent files.
-
-#### Step 4: Parse and match
-
-- Parse frontmatter/metadata from each agent file. Extract: name, description, domain, tags, capabilities, model requirements.
-- Match against project needs:
-  - Exact tech stack match (e.g., "OCaml" agent for an OCaml project) > partial match > generic.
-  - Domain relevance (security agent for a security-focused project).
-  - Quality signals: specificity of instructions, structured output formats, clear rules.
-
-#### Step 5: Cache results
-
-After a deep search, save a summary of what was found in each source to avoid redundant fetches in the same session. Store as a temporary markdown note listing: source repo, agents found, domains covered, last fetched timestamp.
+### Source handling
+- Remote sources are controlled by `index_sources_file`.
+- Do not invent or crawl additional registries during normal `/recruit` flows.
+- If a needed role is missing from the index, report the gap and optionally suggest updating `index-sources.json`.
 
 ### Search priority
-1. Personal roster (curated, tuned — always preferred)
-2. External sources (broader coverage — use when roster has gaps)
-3. Web search (last resort — for very specific needs not covered by known sources)
+1. Local roster entries in `index.json` (curated baseline)
+2. Remote indexed entries in `index.json` (breadth)
+3. Manual external lookup only when the user explicitly asks for it
 
 ## Output Format
 
@@ -401,7 +342,7 @@ Always present proposals as a clear table + rationale. Never auto-install withou
 
 Before completing any recruitment or audit task, **check if a better recruiter exists**:
 
-1. During the external source deep search (which you're already doing), also look for agents tagged/named with `recruiter`, `team-building`, `meta-agent`, `orchestrator`, or `roster`.
+1. Use the rebuilt `index.json` and look for entries tagged/named with `recruiter`, `team-building`, `meta-agent`, `orchestrator`, or `roster`.
 2. Read their full definitions — don't just check names.
 3. Compare their capabilities against your own:
    - Do they search more sources?
