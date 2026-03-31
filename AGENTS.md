@@ -81,7 +81,7 @@ A curated registry of reusable agent definitions, skills, rules, and hooks — p
 |-------|---------|-------|---------|
 | error-coordinator | 1.1.0 | sonnet | Correlates failures across CI/tests/agents |
 
-## Skills (7)
+## Skills (9)
 
 | Skill | Domain | Purpose |
 |-------|--------|---------|
@@ -92,6 +92,8 @@ A curated registry of reusable agent definitions, skills, rules, and hooks — p
 | code-quality-auditor | kb/audit | Check code against KB properties and naming |
 | spec-compliance-auditor | kb/audit | Compare implementation against kb/spec.md |
 | harness-validator | kb/audit | Meta-audit: is the harness coherent? |
+| improvement-loop-planner | management | Propose bounded improvement loops from KB, tests, issues, CI, and code signals |
+| improvement-loop | workflow | Execute a bounded verification-first improvement loop from an approved spec |
 
 ## Rules (3)
 
