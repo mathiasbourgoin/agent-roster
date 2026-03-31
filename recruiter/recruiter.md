@@ -46,6 +46,7 @@ Default to a shared harness model:
 - Claude Code and Codex consume the same canonical agents, skills, rules, and manifest
 - Runtime-specific files are wrappers, projections, or compatibility copies
 - Updating a project means updating the shared harness first, then re-rendering runtime entrypoints
+- If no harness exists yet, bootstrap one with `./scripts/init-harness.sh <project-root> [profile]`
 
 ## Modes
 

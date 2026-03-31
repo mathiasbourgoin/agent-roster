@@ -29,6 +29,8 @@ A curated registry of reusable agent definitions, skills, rules, and hooks — p
 
 - The canonical project harness lives under `.harness/`
 - Claude compatibility is generated under `.claude/`
+- Codex compatibility is generated under `.agents/skills/`
+- The operational initializer is `./scripts/init-harness.sh <project-root> [profile]`
 - The operational projection command is `./scripts/sync-harness.sh <project-root>`
 - Agents manipulating installed project harness data should read `.harness/harness.json` first and treat `.claude/` as a generated compatibility surface
 
@@ -124,7 +126,7 @@ The **tech-lead** enforces the **Ralph Loop** during implementation:
 
 No agent provisions tools or creates skills without tech-lead approval.
 
-When the installed harness changes, project-local agents should update canonical `.harness/` files first, then run `./scripts/sync-harness.sh <project-root>` to refresh Claude-compatible projections.
+When the installed harness changes, project-local agents should update canonical `.harness/` files first, then run `./scripts/sync-harness.sh <project-root>` to refresh Claude and Codex projections.
 
 ## Adding Components
 
