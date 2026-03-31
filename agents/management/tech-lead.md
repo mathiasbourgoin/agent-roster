@@ -19,7 +19,7 @@ requires:
     check: "grep -q git-wright .mcp.json 2>/dev/null"
     optional: true
 isolation: none
-version: 1.4.0
+version: 1.5.0
 author: mathiasbourgoin
 ---
 
