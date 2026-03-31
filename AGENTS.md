@@ -2,7 +2,7 @@
 
 ## Project
 
-A curated registry of reusable Claude Code agent definitions, skills, rules, and hooks — paired with a harness builder that assembles complete Claude Code configurations and a recruiter that finds optimal agent teams.
+A curated registry of reusable agent definitions, skills, rules, and hooks — paired with a harness builder that assembles shared project harnesses and a recruiter that finds optimal agent teams.
 
 ## Conventions
 
@@ -18,12 +18,19 @@ A curated registry of reusable Claude Code agent definitions, skills, rules, and
 
 | Type | Schema | Location | Install target |
 |------|--------|----------|---------------|
-| Agent | `schema/agent-schema.md` | `agents/<domain>/` | `.claude/agents/` |
-| Skill | `schema/skill-schema.md` | `skills/<domain>/` | `.claude/commands/` |
-| Rule | `schema/rule-schema.md` | `rules/<category>/` | `.claude/rules/` |
-| Hook | `schema/hook-schema.md` | `hooks/<category>/` | `settings.json` hooks section |
+| Agent | `schema/agent-schema.md` | `agents/<domain>/` | `.harness/agents/` then project to `.claude/agents/` |
+| Skill | `schema/skill-schema.md` | `skills/<domain>/` | `.harness/skills/` then project to `.claude/commands/` |
+| Rule | `schema/rule-schema.md` | `rules/<category>/` | `.harness/rules/` then project to `.claude/rules/` |
+| Hook | `schema/hook-schema.md` | `hooks/<category>/` | `.harness/hooks/` then project to Claude settings |
 | KB | `schema/kb-schema.md` | `kb/` | `kb/` |
-| Harness | `schema/harness-schema.md` | — | `.claude/harness.json` |
+| Harness | `schema/harness-schema.md` | — | `.harness/harness.json` then project to `.claude/harness.json` |
+
+## Shared Harness
+
+- The canonical project harness lives under `.harness/`
+- Claude compatibility is generated under `.claude/`
+- The operational projection command is `./scripts/sync-harness.sh <project-root>`
+- Agents manipulating installed project harness data should read `.harness/harness.json` first and treat `.claude/` as a generated compatibility surface
 
 ## Agents (17)
 
@@ -116,6 +123,8 @@ The **tech-lead** enforces the **Ralph Loop** during implementation:
 5. QA validates → merge
 
 No agent provisions tools or creates skills without tech-lead approval.
+
+When the installed harness changes, project-local agents should update canonical `.harness/` files first, then run `./scripts/sync-harness.sh <project-root>` to refresh Claude-compatible projections.
 
 ## Adding Components
 

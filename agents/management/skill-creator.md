@@ -253,7 +253,7 @@ After creating a skill that works well:
      -X PUT \
      -f message="feat: add <skill-name> skill" \
      -f branch="feat/add-skill-<skill-name>" \
-     -f content="$(base64 -w0 < .claude/commands/<skill-name>.md)"
+     -f content="$(base64 -w0 < .harness/skills/<skill-name>.md)"
 
    gh pr create --repo <roster_repo> \
      --head "feat/add-skill-<skill-name>" \

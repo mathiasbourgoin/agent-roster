@@ -1,8 +1,10 @@
 # Agent Roster
 
-A curated registry of reusable Claude Code agent definitions. One command gives your project a full AI agent team — recruiter, tech lead, implementers, reviewers, QA, security vetting, and more. The recruiter assembles the right team for your stack, installs it, and keeps it up to date.
+A curated registry of reusable agent definitions, skills, rules, hooks, and harness components. Claude Code remains the primary install path today, and the roster is being structured so Claude Code and Codex can share the same project harness instead of maintaining divergent copies.
 
 ## Quick install
+
+Claude Code remains the current first-class install surface. The quick install flow below is unchanged:
 
 Run this from your project root to install the recruiter as both an agent and a `/recruit` skill — no clone needed:
 
@@ -23,6 +25,17 @@ mkdir -p .claude/agents .claude/commands && \
 ```
 
 The recruiter fetches everything it needs from GitHub at runtime — the roster index, individual agent definitions, and external sources. No local clone required.
+
+## Shared Harness Direction
+
+The intended multi-runtime design is:
+
+- Canonical project harness files live in a shared location such as `.harness/`
+- Claude Code and Codex both consume that same installed harness
+- Runtime-specific files are thin entrypoints, projections, or compatibility views
+- Update behavior is shared: update canonical files first, then re-render runtime entrypoints
+
+That preserves the current Claude experience while allowing Codex to use the same installed agents, skills, rules, and manifest.
 
 ### Optional: fork for your own roster
 
@@ -61,7 +74,7 @@ agent-roster/
 │   ├── security/
 │   ├── specialist/          # expert-debugger, config-migrator
 │   └── testing/             # reviewer, qa
-├── skills/                  # Reusable skill definitions (populated over time)
+├── skills/                  # Reusable workflow definitions
 ├── recruiter/               # The recruiter meta-agent (entry point)
 │   └── recruiter.md
 ├── governor/                # The governor meta-agent (installable as /govern)
@@ -70,9 +83,33 @@ agent-roster/
 │   └── agent-schema.md
 ├── scripts/
 │   ├── build-index.sh       # Generate index.json from agent files
+│   ├── sync-harness.sh      # Project .harness/ into Claude-compatible .claude/ files
 │   └── search.sh            # CLI search across the index
 └── index.json               # Searchable index (fetched via raw URL)
 ```
+
+Recommended project-level install layout:
+
+```text
+project/
+├── .harness/                # Canonical shared harness content
+│   ├── agents/
+│   ├── skills/
+│   ├── rules/
+│   ├── hooks/
+│   └── harness.json
+├── .claude/                 # Claude-specific entrypoints / compatibility files
+├── .agents/
+│   └── skills/              # Codex-facing generated skills
+└── AGENTS.md                # Optional project instructions read by coding agents
+```
+
+Operational rule:
+
+- `.harness/` is canonical
+- `.claude/` is generated for Claude compatibility
+- `.agents/skills/` is generated for Codex compatibility
+- Run `./scripts/sync-harness.sh <project-root>` after changing canonical harness files
 
 ## Usage
 
@@ -96,14 +133,14 @@ https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/index.json
 
 The recruiter has 5 modes:
 
-**Mode 1 — Initial team assembly** (no existing `.claude/agents/`):
+**Mode 1 — Initial team assembly** (no existing shared harness):
 1. Analyzes the project's tech stack, languages, CI, issue tracker
 2. Searches this roster + external sources (deep GitHub API crawl)
 3. Proposes a team with **alternatives for each role** — you pick
 4. Resolves tool dependencies (MCP servers, CLI tools) — offers to install them
-5. On approval, installs agents into `.claude/agents/` with local tuning
+5. On approval, installs canonical files into the shared harness and renders Claude/Codex entrypoints
 
-**Mode 2 — Team audit & upgrade** (existing `.claude/agents/` found):
+**Mode 2 — Team audit & upgrade** (existing harness found):
 - Compares existing agents against roster and external sources
 - Proposes upgrades, additions, and removals
 
@@ -216,5 +253,19 @@ Agent needs a capability
 ## Keeping your team up to date
 
 Run `/recruit update` at any time to check for newer versions of your installed agents and the recruiter itself. Local tunables are preserved — only the agent instructions update.
+
+In the shared harness model, the same update engine should also back Codex. The runtime surface can differ, but the semantics stay the same:
+
+1. Read the installed shared harness manifest
+2. Compare installed versions against the roster
+3. Update canonical shared files
+4. Re-render Claude and Codex entrypoints
+5. Preserve local tunables and report conflicts when manual edits cannot be merged cleanly
+
+For Claude compatibility today, the concrete projection step is:
+
+```bash
+./scripts/sync-harness.sh /path/to/project
+```
 
 The recruiter also self-improves: during searches it checks external sources for better recruiters and proposes replacing itself if one is found. Generalizable improvements your team makes locally get PRed back to this repo.

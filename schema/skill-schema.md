@@ -1,6 +1,6 @@
 # Skill Definition Schema
 
-Skills are markdown files that become Claude Code slash commands. Each skill lives in `skills/<domain>/<name>.md` and is installed to `.claude/commands/<name>.md`.
+Skills are reusable workflow prompts. Each skill lives in `skills/<domain>/<name>.md` and can be exposed through runtime-specific entrypoints.
 
 ## Required Frontmatter
 
@@ -10,16 +10,17 @@ description: <string>        # One-liner shown in Claude Code /help output
 ---
 ```
 
-That's it. Claude Code only reads `description` from skill frontmatter.
+That's it. Claude Code only reads `description` from skill frontmatter, so the shared source schema stays intentionally small.
 
 ## Body
 
-The markdown body contains the full instructions Claude executes when the user invokes `/<name>`. Write it as a direct system prompt — imperative mood, clear steps.
+The markdown body contains the full workflow instructions. Write it as a direct system prompt in runtime-neutral terms when possible: imperative mood, clear steps, minimal assumptions about slash-command syntax.
 
 ## Naming Convention
 
 - File: `skills/<domain>/<name>.md`
-- Installed to: `.claude/commands/<name>.md`
+- Canonical shared location after install: `.harness/skills/<name>.md`
+- Claude compatibility location: `.claude/commands/<name>.md`
 - Name must be kebab-case, unique across all skills
 - Domain groups skills by function (e.g., `dev`, `security`, `workflow`)
 
@@ -50,4 +51,9 @@ You guide the user through a strict red-green-refactor cycle.
 
 ## Install Behavior
 
-The installer copies the file to `.claude/commands/<name>.md`. The skill then appears in Claude Code's `/help` output with the `description` field as its summary. No settings.json entry needed — Claude Code discovers commands from the directory automatically.
+The canonical installer should place the skill in the shared harness and then generate runtime entrypoints:
+
+- Claude Code: copy or render to `.claude/commands/<name>.md`
+- Codex: expose the same workflow through `.agents/skills/<name>.md` or another Codex-native skill surface
+
+Runtime wrappers should stay thin and mechanically regenerable from the shared source.
