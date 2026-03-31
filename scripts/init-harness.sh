@@ -5,12 +5,20 @@
 
 set -euo pipefail
 
+need_cmd() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        echo "Missing required command: $1" >&2; exit 1
+    fi
+}
+need_cmd jq
+
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT_ROOT="${1:-}"
 PROFILE="${2:-developer}"
+FORCE="${3:-}"
 
 if [ -z "$PROJECT_ROOT" ]; then
-    echo "Usage: ./scripts/init-harness.sh <project-root> [profile]" >&2
+    echo "Usage: ./scripts/init-harness.sh <project-root> [profile] [--force]" >&2
     exit 1
 fi
 
@@ -28,6 +36,76 @@ SKILLS_DIR="$HARNESS_DIR/skills"
 RULES_DIR="$HARNESS_DIR/rules"
 HOOKS_DIR="$HARNESS_DIR/hooks"
 MANIFEST="$HARNESS_DIR/harness.json"
+
+detect_project_metadata() {
+    local root="$1"
+    local project_name languages frameworks ci issue_tracker
+    local -a langs=()
+    local -a fws=()
+
+    project_name="$(basename "$root")"
+    ci="null"
+    issue_tracker="null"
+
+    if [ -f "$root/package.json" ]; then
+        langs+=("javascript")
+        if jq -e '.dependencies.react or .devDependencies.react' "$root/package.json" >/dev/null 2>&1; then
+            fws+=("react")
+        fi
+        if jq -e '.dependencies.next or .devDependencies.next' "$root/package.json" >/dev/null 2>&1; then
+            fws+=("nextjs")
+        fi
+        if jq -e '.dependencies.vue or .devDependencies.vue' "$root/package.json" >/dev/null 2>&1; then
+            fws+=("vue")
+        fi
+        if jq -e '.dependencies.svelte or .devDependencies.svelte' "$root/package.json" >/dev/null 2>&1; then
+            fws+=("svelte")
+        fi
+    fi
+
+    [ -f "$root/tsconfig.json" ] && langs+=("typescript")
+    [ -f "$root/pyproject.toml" ] || [ -f "$root/pytest.ini" ] || [ -f "$root/conftest.py" ] && langs+=("python")
+    [ -f "$root/Cargo.toml" ] && langs+=("rust")
+    [ -f "$root/go.mod" ] && langs+=("go")
+    [ -f "$root/dune-project" ] && { langs+=("ocaml"); fws+=("dune"); }
+    [ -f "$root/mix.exs" ] && { langs+=("elixir"); fws+=("phoenix"); }
+    [ -f "$root/Gemfile" ] && langs+=("ruby")
+    [ -f "$root/composer.json" ] && langs+=("php")
+
+    [ -d "$root/.github/workflows" ] && ci='"github-actions"'
+    [ -f "$root/.gitlab-ci.yml" ] && ci='"gitlab-ci"'
+    [ -f "$root/Jenkinsfile" ] && ci='"jenkins"'
+
+    if [ -d "$root/.git" ]; then
+        local origin_url
+        origin_url="$(git -C "$root" remote get-url origin 2>/dev/null || true)"
+        if printf '%s' "$origin_url" | grep -q 'github.com'; then
+            issue_tracker='"github"'
+        elif printf '%s' "$origin_url" | grep -q 'gitlab'; then
+            issue_tracker='"gitlab"'
+        fi
+    fi
+
+    mapfile -t langs < <(printf '%s\n' "${langs[@]}" | awk 'NF && !seen[$0]++')
+    mapfile -t fws < <(printf '%s\n' "${fws[@]}" | awk 'NF && !seen[$0]++')
+
+    languages="$(printf '%s\n' "${langs[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+    frameworks="$(printf '%s\n' "${fws[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+
+    jq -n \
+      --arg project_name "$project_name" \
+      --argjson languages "$languages" \
+      --argjson frameworks "$frameworks" \
+      --argjson ci "$ci" \
+      --argjson issue_tracker "$issue_tracker" \
+      '{
+        name: $project_name,
+        languages: $languages,
+        frameworks: $frameworks,
+        ci: $ci,
+        issue_tracker: $issue_tracker
+      }'
+}
 
 mkdir -p "$AGENTS_DIR" "$SKILLS_DIR" "$RULES_DIR" "$HOOKS_DIR"
 
@@ -95,6 +173,11 @@ FULL_EXTRA_SKILLS=(
     "skills/kb/harness-validator.md"
 )
 
+if [ -d "$HARNESS_DIR" ] && [ "$FORCE" != "--force" ]; then
+    echo "Harness already exists at $HARNESS_DIR. Use --force to overwrite." >&2
+    exit 1
+fi
+
 find "$AGENTS_DIR" -maxdepth 1 -type f -name '*.md' -delete
 find "$SKILLS_DIR" -maxdepth 1 -type f -name '*.md' -delete
 find "$RULES_DIR" -maxdepth 1 -type f -name '*.md' -delete
@@ -119,7 +202,7 @@ if [[ "$PROFILE" == "full" ]]; then
     copy_files "$SKILLS_DIR" "${FULL_EXTRA_SKILLS[@]}"
 fi
 
-project_name="$(basename "$PROJECT_ROOT")"
+project_json="$(detect_project_metadata "$PROJECT_ROOT")"
 
 extract_field() {
     local file="$1"
@@ -221,7 +304,7 @@ hooks_json="$(list_layer_json "$HOOKS_DIR" hooks)"
 
 jq -n \
   --arg profile "$PROFILE" \
-  --arg project_name "$project_name" \
+  --argjson project "$project_json" \
   --argjson agents "$agents_json" \
   --argjson skills "$skills_json" \
   --argjson rules "$rules_json" \
@@ -234,13 +317,7 @@ jq -n \
       {name: "claude-code", enabled: true, entrypoint: ".claude/"},
       {name: "codex", enabled: true, entrypoint: ".agents/skills/"}
     ],
-    project: {
-      name: $project_name,
-      languages: [],
-      frameworks: [],
-      ci: null,
-      issue_tracker: null
-    },
+    project: $project,
     layers: {
       agents: $agents,
       rules: $rules,
