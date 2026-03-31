@@ -119,6 +119,7 @@ copy_files() {
 }
 
 CORE_AGENTS=(
+    "recruiter/recruiter.md"
     "agents/management/tech-lead.md"
     "agents/testing/reviewer.md"
 )

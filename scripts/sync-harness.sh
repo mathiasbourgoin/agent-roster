@@ -110,6 +110,11 @@ if runtime_enabled "claude-code"; then
     sync_markdown_dir "$HARNESS_DIR/agents" "$CLAUDE_DIR/agents"
     sync_markdown_dir "$HARNESS_DIR/skills" "$CLAUDE_DIR/commands"
     sync_markdown_dir "$HARNESS_DIR/rules" "$CLAUDE_DIR/rules"
+    if [ -f "$HARNESS_DIR/agents/recruiter.md" ]; then
+        cp "$HARNESS_DIR/agents/recruiter.md" "$CLAUDE_DIR/commands/recruit.md"
+    else
+        rm -f "$CLAUDE_DIR/commands/recruit.md"
+    fi
     cp "$MANIFEST" "$CLAUDE_DIR/harness.json"
 
     HOOKS_JSON="$(build_hooks_json "$HARNESS_DIR/hooks")"
@@ -128,6 +133,11 @@ fi
 if runtime_enabled "codex"; then
     mkdir -p "$CODEX_SKILLS_DIR"
     sync_markdown_dir "$HARNESS_DIR/skills" "$CODEX_SKILLS_DIR"
+    if [ -f "$HARNESS_DIR/agents/recruiter.md" ]; then
+        cp "$HARNESS_DIR/agents/recruiter.md" "$CODEX_SKILLS_DIR/recruit.md"
+    else
+        rm -f "$CODEX_SKILLS_DIR/recruit.md"
+    fi
 fi
 
 printf 'Synced shared harness from %s\n' "$HARNESS_DIR"
