@@ -66,6 +66,10 @@ Runtime rule:
 
 Current runtime projections:
 
+- OpenCode:
+  - `.opencode/agents/`
+  - `.opencode/rules/`
+  - `opencode.json` for configuration
 - Claude Code:
   - `.claude/agents/`
   - `.claude/commands/`
@@ -108,9 +112,44 @@ For normal usage: yes, ask the recruiter.
 
 Use the scripts only if you are doing manual/advanced setup or working directly from a clone of this repo.
 
-### Claude-only quick install
+### OpenCode quick install
 
-The current quick install path for Claude Code remains:
+For OpenCode users:
+
+```bash
+mkdir -p .opencode/agents && curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/.opencode/agents/recruiter.md -o .opencode/agents/recruiter.md
+```
+
+Then in OpenCode:
+
+```text
+@recruiter help me set up an agent team for this project
+```
+
+The recruiter will analyze your project and propose an optimal agent team. You can also manually install individual agents:
+
+```bash
+# Install specific agents
+curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/.opencode/agents/reviewer.md -o .opencode/agents/reviewer.md
+curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/.opencode/agents/tech-lead.md -o .opencode/agents/tech-lead.md
+```
+
+**Model Configuration:** The agents use GitHub Copilot models by default (`github-copilot/claude-opus-4.5`, etc.). If you have direct Anthropic API access or use OpenCode Zen, create an `opencode.json` in your project to override:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "recruiter": {
+      "model": "anthropic/claude-opus-4-20250514"
+    }
+  }
+}
+```
+
+### Claude Code quick install
+
+The current quick install path for Claude Code:
 
 ```bash
 mkdir -p .claude/agents .claude/commands && curl -sL https://raw.githubusercontent.com/mathiasbourgoin/agent-roster/main/recruiter/recruiter.md | tee .claude/agents/recruiter.md .claude/commands/recruit.md > /dev/null
