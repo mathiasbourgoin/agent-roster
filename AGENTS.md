@@ -33,7 +33,7 @@ A curated registry of reusable agent definitions, skills, rules, and hooks — p
 - OpenCode compatibility is generated under `.opencode/`
 - The operational initializer is `./scripts/init-harness.sh <project-root> [profile]`
 - The operational projection command is `./scripts/sync-harness.sh <project-root>`
-- Agents manipulating installed project harness data should read `.harness/harness.json` first and treat `.claude/` and `.opencode/` as generated compatibility surfaces
+- Agents manipulating installed project harness data should read `.harness/harness.json` first and treat `.claude/`, `.opencode/`, and `.agents/` as generated compatibility surfaces
 
 ## Cross-Backend Sync Rule
 
