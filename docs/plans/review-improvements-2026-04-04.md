@@ -99,34 +99,57 @@ Total: ~770 lines across 6 files (each under 200). The split is purely mechanica
 
 ### 3.1 README quick-start section
 
-Add a "Get started in 3 steps" section at the top of README.md, before the architectural explanation:
+**File:** `README.md` — insert immediately after the three-bullet principles block, before "The harness is the mechanism..."
+
+Content to insert:
 
 ```markdown
 ## Quick Start
 
-1. In your project: `/recruit` — assembles a team (4 core agents by default)
-2. Start a task: ask tech-lead to research and plan
-3. Execute: follow the brief, human-gate each stage
+Install in any project:
+
+```
+/recruit
 ```
 
-Recommended default team (4 agents, covers 80% of tasks):
-- `tech-lead` — orchestration + Ralph Loop
-- `implementer` — execution
-- `reviewer` — code review
-- `qa` — verification
+The recruiter assembles a minimal team and configures the harness. Default team (covers 80% of tasks):
 
-The recruiter already supports this. The gap is documentation — new users have no obvious "minimal" starting point.
+| Agent | Role |
+|-------|------|
+| tech-lead | Orchestration, Ralph Loop, human gates |
+| implementer | Code execution in isolated worktrees |
+| reviewer | Structured review: correctness, security, regression |
+| qa | Independent test verification |
+
+Then: ask `tech-lead` to research and plan your first task.
+```
+
+**Acceptance criteria:**
+- Quick Start section appears before any architecture explanation
+- Table renders correctly in GitHub markdown
+- `/recruit` is the only command shown (no flags, no modes)
+- No mention of `.harness/`, projections, or harness model in this section
 
 ### 3.2 Recruiter: focus pass (not a trim)
 
-The reviewer's concern is that the recruiter feels heavy and ceremonial. The 33KB size is real but not the root problem — the issue is that the recruiter's decision logic is buried in prose. Making it more focused and targeted means:
+**File:** `recruiter/recruiter.md` (canonical) — sync to `.claude/agents/recruiter.md` after
 
-- Tighter mode detection (currently implicit in prose, should be explicit decision tree upfront)
-- Scoring algorithm presented as a reference table, not embedded mid-paragraph
-- Mode docs deduplicated (the search strategy section is repeated in spirit across Mode 1, 2, and 3)
-- Clearer separation: what the recruiter decides vs. what it asks the human
+The recruiter's decision logic is buried in prose across 5 mode descriptions. Restructure for clarity without removing capability:
 
-**Decision:** recruiter gets a focus/targeting pass as Phase 3b, after README quick-start. No content removal — restructure for clarity and reduce cognitive load at the entry point.
+1. **Add mode-detection table at the top** (before any mode prose) — a single table mapping invocation pattern → mode number, so the reader knows in 3 seconds which section applies to them.
+
+2. **Extract scoring algorithm** from Mode 1 prose into a dedicated `## Scoring Reference` section — a standalone table, not embedded mid-paragraph. Mode 1 prose replaces it with a one-line reference: "See Scoring Reference."
+
+3. **Deduplicate search strategy** — the GitHub tree traversal instructions appear in Mode 1, Mode 2, and Mode 3 in equivalent form. Extract to a single `## Search Strategy` section. Modes reference it by name.
+
+4. **Split "what recruiter decides" from "what recruiter asks"** — add a `## Decision Boundaries` section that explicitly lists: decisions the recruiter makes autonomously vs. questions it must ask the human before proceeding.
+
+**Acceptance criteria:**
+- Mode detection table is the first substantive content after frontmatter
+- Scoring algorithm appears exactly once
+- Search strategy appears exactly once
+- Total line count reduced (deduplication effect) — target under 500 lines
+- No capability removed: all 5 modes, all scoring factors, all search logic preserved
 
 ---
 
