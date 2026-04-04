@@ -5,7 +5,8 @@
   "type": "commonjs",
   "scripts": {
     "build:index": "node scripts/run-build-index.js",
-    "build:ts": "tsc -p tsconfig.json"
+    "build:ts": "tsc -p tsconfig.json",
+    "test": "npm run build:ts && node --test dist/scripts/build-index.test.js"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
