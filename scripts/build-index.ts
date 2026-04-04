@@ -114,7 +114,7 @@ function parseScalar(raw: string): string {
   return raw.trim().replace(/^['"]|['"]$/g, "");
 }
 
-function parseFrontmatter(content: string): Record<string, string | string[]> | null {
+export function parseFrontmatter(content: string): Record<string, string | string[]> | null {
   const lines = content.split(/\r?\n/);
   if (lines[0]?.trim() !== "---") {
     return null;
@@ -152,7 +152,7 @@ function parseFrontmatter(content: string): Record<string, string | string[]> | 
   return fm;
 }
 
-function parseLooseMetadata(content: string): Record<string, string | string[]> | null {
+export function parseLooseMetadata(content: string): Record<string, string | string[]> | null {
   const lines = content.split(/\r?\n/).slice(0, 160);
   const meta: Record<string, string | string[]> = {};
   const keys = new Set([
@@ -197,7 +197,7 @@ function parseLooseMetadata(content: string): Record<string, string | string[]> 
   return null;
 }
 
-function inferComponentType(filePath: string): ComponentType {
+export function inferComponentType(filePath: string): ComponentType {
   const normalized = filePath.replace(/\\/g, "/");
   if (
     normalized.startsWith("agents/") ||
@@ -222,7 +222,7 @@ function inferComponentType(filePath: string): ComponentType {
   return "other";
 }
 
-function normalizeEntry(
+export function normalizeEntry(
   frontmatter: Record<string, string | string[]>,
   filePath: string,
   source: "local" | "remote",
@@ -598,7 +598,7 @@ function inferCatalogCompatible(sourceId: string, text: string): string[] {
   return inferCompatibleFromText(sourceId, text);
 }
 
-function inferComplexity(content: string): string {
+export function inferComplexity(content: string): string {
   const lines = content.split(/\r?\n/).length;
   if (lines < 120) {
     return "low";
@@ -609,7 +609,7 @@ function inferComplexity(content: string): string {
   return "high";
 }
 
-function enrichRemoteEntry(entry: IndexEntry, content: string): IndexEntry {
+export function enrichRemoteEntry(entry: IndexEntry, content: string): IndexEntry {
   const inferredDomain = inferDomainBySource(entry.source_id, entry.path);
   const fileNameTokens = tokenize(path.basename(entry.path, ".md"));
   const pathTokens = tokenize(path.dirname(entry.path));
@@ -823,7 +823,7 @@ function appendRemoteEntries(allEntries: IndexEntry[], stats: BuildStats, source
   }
 }
 
-function chooseBestSourceEntries(cached: SourceCache | null, refreshed: IndexEntry[]): IndexEntry[] {
+export function chooseBestSourceEntries(cached: SourceCache | null, refreshed: IndexEntry[]): IndexEntry[] {
   if (!cached || cached.entries.length === 0) {
     return refreshed;
   }
