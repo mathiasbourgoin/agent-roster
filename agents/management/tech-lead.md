@@ -12,6 +12,11 @@ tunables:
   require_review: true
   require_qa: true
   max_parallel_implementers: 5
+pipeline_role:
+  triggered_by: user directly or orchestrating Claude
+  receives: task description or issue set
+  produces: research brief, batch plan, spawn requests, merge decisions
+  human_gate: both — quiz before execution batch begins and before each merge
 isolation: none
 version: 1.6.0
 author: mathiasbourgoin
