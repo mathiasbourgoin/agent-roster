@@ -101,11 +101,13 @@ briefs/qa-phase<N>.md         -- QA -> tech-lead (QA report)
    - What merged (commits, files changed, tests added).
    - Reviewer verdict and any conditional findings.
    - Carry-forward items for the next phase.
-   - Next phase entry point (which files to read first).
-3. Tell the user the session is done and they can close it safely.
-4. The report is the only context that needs to survive the session boundary. No conversation state carries forward.
+   - Next session entry point (which files to read first).
+3. **Before signalling closure, verify all remaining phases are fully specified in the plan** — not just the next one. A session is only safely closeable when every phase still to be executed has enough detail in `docs/plans/` that a fresh session can start and complete it without rediscovering context from this conversation.
+4. If any remaining phase is underspecified, expand the plan before closing.
+5. Tell the user the session is done and they can close it safely.
+6. The report is the only context that needs to survive the session boundary. No conversation state carries forward.
 
-Rationale: each session starts fresh from a report, not from a polluted conversation. This enforces context hygiene across session boundaries.
+Rationale: the report is a context bridge, not a pointer to a conversation. If future phases are not fully documented, the next session inherits a gap — not a clean start. The session boundary is only safe when the plan is complete.
 
 ## Applies To
 
