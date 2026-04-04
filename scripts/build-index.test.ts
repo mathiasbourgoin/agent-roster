@@ -82,13 +82,10 @@ describe("parseFrontmatter", () => {
     assert.equal(result["description"], "Does stuff");
   });
 
-  it("missing closing --- returns accumulated record (EOF treated as end of block)", () => {
+  it("missing closing --- returns null", () => {
     const content = `---\nname: my-agent\ndescription: Does stuff\n`;
     const result = parseFrontmatter(content);
-    // The function falls off the end of lines and returns fm rather than null.
-    // This documents the current behavior after the parseFrontmatter bug fix.
-    assert.ok(result !== null);
-    assert.equal(result["name"], "my-agent");
+    assert.equal(result, null);
   });
 
   it("inline arrays parsed correctly", () => {

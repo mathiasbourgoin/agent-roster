@@ -149,7 +149,7 @@ export function parseFrontmatter(content: string): Record<string, string | strin
     }
   }
 
-  return fm;
+  return null;
 }
 
 export function parseLooseMetadata(content: string): Record<string, string | string[]> | null {
