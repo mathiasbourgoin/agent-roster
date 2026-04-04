@@ -95,7 +95,7 @@ Equivalent Codex entrypoints may differ, but they must drive the same underlying
    b. **Read unified `index.json`** (local roster + deterministic remote entries from `index_sources_file`).
    c. **Prefer personal roster** entries first, then use remote entries as alternatives.
 
-3. **Rank candidates** using a scored algorithm. Compute a score for each candidate and sort descending:
+4. **Rank candidates** using a scored algorithm. Compute a score for each candidate and sort descending:
 
    **The lead slot must be filled first.** A team without a lead is not a team — it is a collection of agents with no coordination, no human gates, and no quality enforcement. If no lead candidate scores above zero, stop and report the gap before scoring anything else.
 
@@ -119,7 +119,7 @@ Equivalent Codex entrypoints may differ, but they must drive the same underlying
    - Domain coverage: ensure testing, review, implementation, and management roles are filled before adding specialists.
    - Avoid redundancy: two agents scoring within 2 points of each other for the same role = present both as alternatives, don't double-recruit.
 
-4. **Propose the team with communication graph:**
+5. **Propose the team with communication graph:**
 
    Write the full proposal to `docs/team-proposal-<YYYY-MM-DD>.md`. Include the team roster, the pipeline topology (who triggers whom, what human gates exist between stages), and dependency status. Then present a tl;dr and run the validation quiz (per `rules/governance/human-validation.md`) before installing anything.
 
@@ -164,7 +164,7 @@ Equivalent Codex entrypoints may differ, but they must drive the same underlying
 
    Do not write a single file to the harness until the quiz passes.
 
-5. **On user selection — install in three layers:**
+6. **On user selection — install in three layers:**
 
    For each selected agent, apply all three layers before writing to the harness. Present the full diff of changes to the user and run the validation quiz before committing anything to disk.
 
@@ -349,7 +349,6 @@ Include a dependency section in the team proposal:
 ### Optional (agent works without, but with reduced capability)
 | Tool | Type | Needed by | Status | Install |
 |------|------|-----------|--------|---------|
-| playwright | mcp | qa | NOT FOUND | `npx @anthropic-ai/mcp-playwright@latest --install` |
 | playwright | mcp | qa | NOT FOUND | `npx @anthropic-ai/mcp-playwright@latest --install` |
 | gh | cli | recruiter | available | — |
 

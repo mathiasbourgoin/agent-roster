@@ -7,6 +7,11 @@ tags: [planning, decomposition, context-compression, brief]
 model: opus
 complexity: high
 compatible_with: [claude-code]
+pipeline_role:
+  triggered_by: tech-lead spawn request (after research brief validated)
+  receives: full research brief content pasted inline
+  produces: sub-briefs per execution agent at briefs/<task>-<role>.md + spawn requests
+  human_gate: after — human validates decomposition quiz before execution agents are spawned
 isolation: none
 version: 1.0.0
 author: mathiasbourgoin

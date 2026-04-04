@@ -41,6 +41,8 @@ The project purpose has shifted from "a registry of reusable agent components" t
 
 ### KB Updates
 
+Note: `kb/` is gitignored — KB files are project-local and not committed to the roster repo. The following changes are applied locally when the harness is initialized or updated.
+
 - `kb/spec.md`: rewritten to reflect team-first purpose, execution model, and non-goals (no persona simulation).
 - `kb/architecture.md`: added Team Orchestration Flow, Context Kill Points, Execution Model, Human Gates, and Recruiter Install Model sections.
 - `kb/glossary.md`: expanded from 6 to 20+ terms covering team/pipeline/governance vocabulary.
