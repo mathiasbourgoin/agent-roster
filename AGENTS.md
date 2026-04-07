@@ -28,12 +28,36 @@ A curated registry of reusable agent definitions, skills, rules, and hooks — p
 ## Shared Harness
 
 - The canonical project harness lives under `.harness/`
-- OpenCode compatibility is generated under `.opencode/`
 - Claude compatibility is generated under `.claude/`
 - Codex compatibility is generated under `.agents/skills/`
+- OpenCode compatibility is generated under `.opencode/`
 - The operational initializer is `./scripts/init-harness.sh <project-root> [profile]`
 - The operational projection command is `./scripts/sync-harness.sh <project-root>`
-- Agents manipulating installed project harness data should read `.harness/harness.json` first and treat `.opencode/`, `.claude/`, and `.agents/` as generated compatibility surfaces
+- Agents manipulating installed project harness data should read `.harness/harness.json` first and treat `.claude/` and `.opencode/` as generated compatibility surfaces
+
+## Cross-Backend Sync Rule
+
+**Every change to a component must be reflected in all active backend projections before merging.**
+
+Backend surfaces and their component mappings:
+
+| Component | Claude (`.claude/`) | Codex (`.agents/`) | OpenCode (`.opencode/`) |
+|-----------|--------------------|--------------------|------------------------|
+| Agents | `agents/<name>.md` | — | `agents/<name>.md` |
+| Skills | `commands/<name>.md` | `skills/<name>.md` | `skills/<name>/SKILL.md` |
+| Rules | `rules/<name>.md` | — | `rules/<name>.md` (referenced via `opencode.json` `instructions`) |
+| Hooks | `settings.local.json` | — | document in rules (no native hook API) |
+
+When adding or modifying a component:
+
+1. Update the canonical source in `.harness/` (or `agents/`, `skills/`, `rules/`, `hooks/` source trees)
+2. Run `npm run build:index` to rebuild the registry index
+3. Update all backend projections listed above — **do not leave any backend stale**
+4. Update the version field in the component's frontmatter (patch/minor/major per semver rules above)
+5. Update the component table in this file
+6. Open a PR — CI or a reviewer should verify all backends are in sync
+
+If a component has no meaningful equivalent in a backend (e.g. hooks in OpenCode), add a note in the relevant rules file explaining the gap and any manual workaround.
 
 ## Agents (17)
 
@@ -137,5 +161,6 @@ Use the recruiter's Mode 4 (agent creation) or skill-creator for the full workfl
 
 1. Create file following the appropriate schema
 2. Run `npm run build:index`
-3. Update this file
-4. Open a PR
+3. Update all backend projections (see Cross-Backend Sync Rule above)
+4. Update this file
+5. Open a PR
