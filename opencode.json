@@ -1,10 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    ".opencode/rules/sycophancy.md",
+    ".opencode/rules/escalation.md",
+    ".opencode/rules/code-quality.md",
+    ".opencode/rules/human-validation.md",
+    ".opencode/rules/hooks.md"
+  ],
   "agent": {
     "tech-lead": {
       "description": "Orchestrates agent teams and enforces quality gates",
       "mode": "primary",
-      "model": "github-copilot/claude-opus-4.5",
+      "model": "github-copilot/claude-opus-4.6",
       "temperature": 0.3,
       "permission": {
         "edit": "allow",
@@ -13,14 +20,19 @@
           "*": "allow",
           "implementer": "allow",
           "reviewer": "allow",
-          "qa": "allow"
+          "qa": "allow",
+          "architect": "allow",
+          "planner": "allow",
+          "expert-debugger": "allow",
+          "error-coordinator": "allow",
+          "performance-monitor": "allow"
         }
       }
     },
     "recruiter": {
       "description": "Analyzes projects and assembles optimal agent teams",
       "mode": "subagent",
-      "model": "github-copilot/claude-opus-4.5",
+      "model": "github-copilot/claude-opus-4.6",
       "temperature": 0.3,
       "permission": {
         "edit": "allow",
@@ -28,10 +40,54 @@
         "webfetch": "allow"
       }
     },
+    "harness-builder": {
+      "description": "Assembles complete harness configs and projects to all backend surfaces",
+      "mode": "subagent",
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.3,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "allow"
+      }
+    },
+    "kb-agent": {
+      "description": "Bootstraps and maintains the project knowledge base",
+      "mode": "subagent",
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "deny"
+      }
+    },
+    "skill-creator": {
+      "description": "Creates reusable skills from repeated patterns",
+      "mode": "subagent",
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.3,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "allow"
+      }
+    },
+    "context-manager": {
+      "description": "Maintains concise shared context across multi-agent workflows",
+      "mode": "subagent",
+      "model": "github-copilot/claude-haiku-4.5",
+      "temperature": 0.1,
+      "permission": {
+        "edit": "allow",
+        "bash": "deny",
+        "webfetch": "deny"
+      }
+    },
     "reviewer": {
       "description": "Performs structured code review focused on security and correctness",
       "mode": "subagent",
-      "model": "github-copilot/claude-opus-4.5",
+      "model": "github-copilot/claude-opus-4.6",
       "temperature": 0.1,
       "permission": {
         "edit": "deny",
@@ -47,7 +103,7 @@
     "implementer": {
       "description": "Implements features and fixes with TDD workflow",
       "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4.5",
+      "model": "github-copilot/claude-sonnet-4.6",
       "temperature": 0.2,
       "permission": {
         "edit": "allow",
@@ -76,7 +132,7 @@
     "architect": {
       "description": "Code quality guardian with architecture and KB checks",
       "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4.5",
+      "model": "github-copilot/claude-sonnet-4.6",
       "temperature": 0.2,
       "permission": {
         "edit": "deny",
@@ -86,6 +142,92 @@
           "rg *": "allow",
           "find *": "allow"
         },
+        "webfetch": "deny"
+      }
+    },
+    "tool-provisioner": {
+      "description": "Discovers and evaluates MCP/CLI tooling options",
+      "mode": "subagent",
+      "model": "github-copilot/claude-sonnet-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "allow"
+      }
+    },
+    "mcp-vetter": {
+      "description": "Security vetting for MCP server candidates",
+      "mode": "subagent",
+      "model": "github-copilot/claude-sonnet-4.6",
+      "temperature": 0.1,
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "deny",
+          "git log*": "allow",
+          "rg *": "allow"
+        },
+        "webfetch": "allow"
+      }
+    },
+    "performance-monitor": {
+      "description": "Profiles CI, tests, and runtime hotspots",
+      "mode": "subagent",
+      "model": "github-copilot/claude-sonnet-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "webfetch": "deny"
+      }
+    },
+    "expert-debugger": {
+      "description": "Deep diagnosis for hard build, integration, and runtime failures",
+      "mode": "subagent",
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "webfetch": "allow"
+      }
+    },
+    "config-migrator": {
+      "description": "One-shot config/environment migrations with rollback awareness",
+      "mode": "subagent",
+      "model": "github-copilot/claude-sonnet-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "deny"
+      }
+    },
+    "error-coordinator": {
+      "description": "Correlates failures across CI, tests, and agents",
+      "mode": "subagent",
+      "model": "github-copilot/claude-sonnet-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "deny",
+          "git log*": "allow",
+          "git diff*": "allow",
+          "rg *": "allow"
+        },
+        "webfetch": "deny"
+      }
+    },
+    "planner": {
+      "description": "Decomposes research briefs into scoped sub-briefs for execution agents",
+      "mode": "subagent",
+      "model": "github-copilot/claude-opus-4.6",
+      "temperature": 0.2,
+      "permission": {
+        "edit": "allow",
+        "bash": "deny",
         "webfetch": "deny"
       }
     }
